@@ -6,5 +6,6 @@ module.exports = {
   ],
   rules: {
     // 'vue/no-unused-vars': 'error'
-  }
-}
+    'import/prefer-default-export': 0,
+  },
+};

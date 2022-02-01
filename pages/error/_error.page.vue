@@ -9,6 +9,13 @@
   </div>
 </template>
 
-<script setup>
-defineProps(['is404'])
+<script>
+export default {
+  props: {
+    is404: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
 </script>

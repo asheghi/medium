@@ -6,7 +6,7 @@
     "server": "node ./server",
     "server:prod": "cross-env NODE_ENV=production node ./server",
     "lint": "eslint . --ext .js,.vue",
-    "lint-fix": "eslint --fix {**/*,*}.{js,ts,jsx,tsx,html,vue}"
+    "lint-fix": "eslint . --ext .js,.vue --fix"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "^2.0.1",
