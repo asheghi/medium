@@ -1,7 +1,7 @@
 import { renderToString } from '@vue/server-renderer'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr'
 import { createApp } from './app'
-import logoUrl from './logo.svg'
+import logoUrl from '../assets/icons/logo.svg'
 
 export { render }
 // See https://vite-plugin-ssr.com/data-fetching
