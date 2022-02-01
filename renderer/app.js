@@ -1,6 +1,8 @@
 import { createSSRApp, h } from 'vue';
 import { setPageContext } from './usePageContext';
 
+import '../assets/styles/tailwind.css';
+
 function createApp(pageContext) {
   const { Page, pageProps } = pageContext;
   const PageComponent = {
