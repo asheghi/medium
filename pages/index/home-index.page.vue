@@ -1,13 +1,11 @@
 <template>
   <div class="HomePage min-h-screen flex justify-center items-center">
-    <div class="header">
-      Awesome SSR Blog
-    </div>
+    <BlogHeader />
     <div class="content">
       <a
         v-for="post in posts"
-        :key="post.id"
-        :href="'/post/' + post.id"
+        :key="post.slug"
+        :href="'/post/' + post.slug"
         class="post"
       >
         <h2
@@ -62,19 +60,18 @@
         </a>
       </div>
     </div>
-    <div
-      class="footer"
-    >
-      powered by <span class="text-red-600">♥</span>
-    </div>
+    <BlogFooter />
   </div>
 </template>
 
 <script>
 import { usePageContext } from '../../renderer/usePageContext';
 import { getImageSrc } from '../../lib/utils';
+import BlogHeader from '../../components/BlogHeader.vue';
+import BlogFooter from '../../components/BlogFooter.vue';
 
 export default {
+  components: { BlogFooter, BlogHeader },
   setup() {
     const { posts, pagination } = usePageContext();
     const { page, pageCount } = pagination || { page: 1, pageCount: 1 };
@@ -131,9 +128,6 @@ export default {
   .post,.link{
     @apply transform transition hover:scale-[1.02] active:scale-95
     hover:shadow-lg hover:border-primary-300;
-  }
-  .footer{
-    @apply opacity-50;
   }
 }
 </style>
