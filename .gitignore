@@ -2,3 +2,6 @@ node_modules
 .idea
 yarn.lock
 *.log
+
+**/*.db
+**/*.db-journal

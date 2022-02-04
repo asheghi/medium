@@ -1,11 +1,25 @@
 const express = require('express');
 const { createPageRenderer } = require('vite-plugin-ssr');
+const session = require('express-session');
+const { ApiRouter } = require('./api/api.index');
+const { seedDatabase } = require('./lib/seeder');
+const { accessControlMiddleware } = require('./lib/acl.middleware');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const root = `${__dirname}/..`;
 
 async function startServer() {
+  await seedDatabase();
+
   const app = express();
+
+  app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+  }));
+
+  app.use(ApiRouter);
 
   let viteDevServer;
   if (isProduction) {
@@ -20,6 +34,7 @@ async function startServer() {
     app.use(viteDevServer.middlewares);
   }
 
+  app.use(accessControlMiddleware);
   const renderPage = createPageRenderer({ viteDevServer, isProduction, root });
   app.get('*', async (req, res, next) => {
     const url = req.originalUrl;
