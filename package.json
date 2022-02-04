@@ -6,7 +6,13 @@
     "server": "dotenv node ./server",
     "server:prod": "dotenv -v NODE_ENV=production node ./server",
     "lint": "eslint . --ext .js,.vue",
-    "lint-fix": "eslint . --ext .js,.vue --fix"
+    "lint-fix": "eslint . --ext .js,.vue --fix",
+    "prisma:gen": "npx prisma generate --schema ./server/prisma/schema.prisma/",
+    "prisma:dev": "npx prisma migrate dev --name init --schema ./server/prisma/schema.prisma",
+    "prisma:deploy": "npx prisma migrate deploy --schema ./server/prisma/schema.prisma",
+    "prisma:reset": "npx prisma migrate reset --schema ./server/prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema ./server/prisma/schema.prisma -p 8080",
+    "start:docker": "npm run prisma:deploy && npm run server:prod"
   },
   "dependencies": {
     "@prisma/client": "^3.9.1",
