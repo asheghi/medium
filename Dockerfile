@@ -21,4 +21,6 @@ RUN npm run build
 
 EXPOSE 3000
 
+RUN mkdir "/data"
+
 CMD [ "npm", "run", "start:docker" ]
