@@ -23,7 +23,7 @@
         >
         <div
           class="short-desc"
-          v-html="post.shortDesc"
+          v-html="post.summary"
         />
       </a>
       <div
@@ -111,7 +111,14 @@ export default {
     @apply container flex flex-col gap-4 mb-auto w-full;
     max-width: 500px;
     .post{
-      @apply border px-4 py-2 rounded-xl cursor-pointer;
+      @apply px-4 py-2 cursor-pointer transition;
+      border-left: 3px solid transparent;
+      &:hover{
+        .title{
+          @apply text-primary;
+        }
+        border-left: 3px solid theme('colors.primary.500');
+      }
       .title{
         @apply text-xl tracking-wider capitalize;
       }
@@ -147,10 +154,6 @@ export default {
         fill: theme('colors.green.800')
       }
     }
-  }
-  .post,.link{
-    @apply transform transition hover:scale-[1.02] active:scale-95
-    hover:shadow-lg hover:border-primary-300;
   }
   .no-post{
     @apply px-4 py-2 flex flex-col items-center gap-2 my-auto;
