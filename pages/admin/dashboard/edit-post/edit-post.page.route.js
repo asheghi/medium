@@ -1,1 +1,1 @@
-export default '/admin/edit-post';
+export default '/admin/post/:id/edit';

@@ -1,21 +1,18 @@
 <template>
   <div class="ShowPost">
     <BlogHeader />
-    <div class="content prose">
+    <div
+      v-if="post"
+      class="content prose"
+    >
       <h2
         class="title"
         v-text="post.title"
       />
       <p
         class="short-desc"
-        v-text="post.shortDesc"
+        v-text="post.summary"
       />
-      <img
-        v-if="getImageSrc(post.image)"
-        :src="getImageSrc(post.image)"
-        alt=""
-        class="image"
-      >
       <div
         v-if="post.content"
         class="post-content"

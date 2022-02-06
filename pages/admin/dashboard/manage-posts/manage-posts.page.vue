@@ -5,10 +5,10 @@
         Posts
       </h2>
       <a
-        :href="'/admin/edit-post'"
-        class="btn capitalize bg-primary text-white"
+        :href="'/api/posts/create'"
+        class="btn"
       >
-        crete new
+        New Post
       </a>
     </div>
     <div class="list">
@@ -23,7 +23,7 @@
         />
         <div class="actions flex gap-4 opacity-75">
           <a
-            :href="'/admin/edit-post?postId=' + post.id"
+            :href="'/admin/post/' + post.id+ '/edit'"
             v-text="'Edit'"
           />
           <div
@@ -70,7 +70,8 @@ export default {
       @apply text-2xl;
     }
     .btn{
-      @apply border rounded px-2 py-1;
+      @apply rounded px-2 py-1  capitalize text-primary border-primary hover:shadow-lg active:shadow-sm
+      hover:bg-primary active:scale-95 hover:text-white hover:scale-110 transform  transition;
     }
   }
 

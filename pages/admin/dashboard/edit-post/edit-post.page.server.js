@@ -5,9 +5,7 @@ const prisma = new PrismaClient();
 export const passToClient = ['pageProps', 'urlPathname', 'routeParams', 'post'];
 
 export async function onBeforeRender(pageContext) {
-  const { url } = pageContext;
-  const queryParams = parse(url.substring(url.indexOf('?') + 1));
-  const { postId } = queryParams;
+  const { id: postId } = pageContext.routeParams;
   const extra = {};
   if (postId) {
     extra.post = await prisma.post.findUnique({ where: { id: +postId } });

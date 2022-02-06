@@ -17,6 +17,9 @@
   "dependencies": {
     "@prisma/client": "^3.9.1",
     "@tailwindcss/typography": "^0.5.1",
+    "@tiptap/extension-bubble-menu": "^2.0.0-beta.55",
+    "@tiptap/starter-kit": "^2.0.0-beta.181",
+    "@tiptap/vue-3": "^2.0.0-beta.90",
     "@vitejs/plugin-vue": "^2.0.1",
     "@vue/compiler-sfc": "^3.2.26",
     "@vue/server-renderer": "^3.2.26",
@@ -27,12 +30,14 @@
     "debug": "^4.3.3",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "lodash.debounce": "^4.0.8",
     "marked": "^4.0.12",
     "qs": "^6.10.3",
     "sass": "^1.49.4",
     "slugify": "^1.6.5",
     "vite": "^2.7.2",
     "vite-plugin-ssr": "^0.3.43",
+    "vite-svg-loader": "^3.1.2",
     "vue": "^3.2.26"
   },
   "devDependencies": {
@@ -45,5 +50,8 @@
     "postcss": "^8.4.6",
     "prisma": "^3.9.1",
     "tailwindcss": "^3.0.18"
+  },
+  "imports": {
+    "@/*": "./*"
   }
 }
