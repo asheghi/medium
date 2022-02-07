@@ -1,6 +1,7 @@
 const express = require('express');
 const { createPageRenderer } = require('vite-plugin-ssr');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const { ApiRouter } = require('./api/api.index');
 const { seedDatabase } = require('./lib/seeder');
 const { accessControlMiddleware } = require('./lib/acl.middleware');
@@ -14,6 +15,7 @@ async function startServer() {
   const app = express();
 
   app.use(session({
+    store: new FileStore({}),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
