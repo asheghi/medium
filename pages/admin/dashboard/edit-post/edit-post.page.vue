@@ -28,7 +28,7 @@
       >
     </div>
     <PostEditor
-      v-if="post"
+      v-if="post && hasMounted"
       v-model="form.draftContent"
     />
     <Modal
@@ -88,7 +88,7 @@ import { domain } from '../../../../lib/config';
 
 const debug = getDebug('edit-post', 'page');
 export default {
-  name: 'CreatePost',
+  name: 'EditPost',
   components: { PostEditor, LogoIcon, Modal },
   setup() {
     const pageContext = usePageContext();
@@ -97,7 +97,9 @@ export default {
   },
   data() {
     const options = {
-      leading: true, trailing: true, maxWait: 5000,
+      leading: true,
+      trailing: true,
+      maxWait: 5000,
     };
     const debouncedSave = debounce(this.saveDraft, 5000, options);
     const {
@@ -110,6 +112,7 @@ export default {
       loadingPublish: false,
       slug,
       summary,
+      hasMounted: false,
     };
   },
   computed: {
@@ -138,6 +141,7 @@ export default {
       if (!this.form.draftTitle) this.form.draftTitle = post.title;
       if (!this.form.draftContent) this.form.draftContent = post.content;
       if (!this.slug) this.slug = slugify(this.form.draftTitle);
+      this.hasMounted = true;
     }
   },
   methods: {

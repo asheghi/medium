@@ -11,76 +11,103 @@
         New Post
       </a>
     </div>
-    <div class="list">
+    <div class="tabs">
       <div
-        v-for="post in posts"
-        :key="post.id"
-        class="post"
+        class="tab"
+        :class="{active:currentTab === 'drafts'}"
+        @click="currentTab = 'drafts'"
       >
-        <div
-          class="title"
-          v-text="post.title"
-        />
-        <div class="actions flex gap-4 opacity-75">
-          <a
-            :href="'/admin/post/' + post.id+ '/edit'"
-            v-text="'Edit'"
-          />
-          <div
-            class="delete cursor-pointer text-red-500"
-            @click="deletePost(post)"
-          >
-            Delete
-          </div>
-        </div>
+        Drafts
       </div>
+      <div
+        class="tab"
+        :class="{active:currentTab === 'published'}"
+        @click="currentTab = 'published'"
+      >
+        Published
+      </div>
+    </div>
+    <div class="list">
+      <PostsList
+        :posts="posts_filtered"
+        @deletedPost="onPostDeleted"
+        @unPublishedPost="onUnPublishedPost"
+      />
     </div>
   </div>
 </template>
 <script>
 import { ref } from 'vue';
-import { ax } from '../../../../lib/plugins/axios';
 import { usePageContext } from '../../../../renderer/usePageContext';
+import PostsList from './posts-list.vue';
 
 export default {
   name: 'ListPosts',
+  components: { PostsList },
   setup() {
     const { posts: originalPosts } = usePageContext();
     const posts = ref(originalPosts);
     return { posts };
   },
-  methods: {
-    async deletePost(post) {
-      const { data, status } = await ax.delete(`posts/${post.id}`);
-      if (status === 200) {
-        this.posts = this.posts.filter((it) => it.id !== post.id);
+  data() {
+    return {
+      currentTab: 'drafts',
+    };
+  },
+  computed: {
+    posts_filtered() {
+      const { currentTab, posts } = this;
+      if (currentTab === 'drafts') {
+        return posts.filter((it) => !it.published);
       }
+      if (currentTab === 'published') {
+        return posts.filter((it) => it.published);
+      }
+      return posts;
+    },
+  },
+  methods: {
+    onPostDeleted(post) {
+      this.posts = this.posts.filter((it) => it.id !== post.id);
+    },
+    onUnPublishedPost(post) {
+      const index = this.posts.findIndex((it) => it.id !== post.id);
+      this.posts[index].published = false;
     },
   },
 };
 </script>
 <style lang="scss">
-.ManagePosts{
+.ManagePosts {
 
   max-width: 600px;
   @apply mx-auto px-8 pt-16 mx-auto;
-  .top{
+  .top {
     @apply flex justify-between  items-center;
     .head {
       @apply text-2xl;
     }
-    .btn{
-      @apply rounded px-2 py-1  capitalize text-primary border-primary hover:shadow-lg active:shadow-sm
-      hover:bg-primary active:scale-95 hover:text-white hover:scale-110 transform  transition;
+
+    .btn {
+      @apply rounded px-2 py-1  capitalize text-primary border-primary
+      hover:shadow-lg active:shadow-sm hover:bg-primary active:scale-95
+      hover:text-white hover:scale-110 transform  transition;
     }
   }
 
-  .list{
-    @apply flex flex-col mx-auto gap-4 py-4;
-    .post {
-      @apply flex mx-auto justify-between border px-4 py-2 text-lg w-full rounded
-      hover:bg-gray-100;
+  .tabs {
+    @apply flex gap-4 pt-2;
+    .tab {
+      @apply text-gray-500 cursor-pointer transition-all;
+      &.active {
+        @apply cursor-default text-primary-600 font-bold;
+      }
     }
+  }
+
+  .list {
+    @apply flex flex-col mx-auto gap-4;
+
   }
 }
 </style>

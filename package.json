@@ -32,6 +32,7 @@
     "express-session": "^1.17.2",
     "lodash.debounce": "^4.0.8",
     "marked": "^4.0.12",
+    "moment": "^2.29.1",
     "qs": "^6.10.3",
     "sass": "^1.49.4",
     "slugify": "^1.6.5",

@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue';
 import ExclamationIcon from '../assets/icons/dynamic/icon-warning.svg';
-import LoadingIcon from '../assets/icons/dynamic/icon-download.svg';
+import LoadingIcon from '../assets/icons/dynamic/icon-void.svg';
 
 export default defineComponent({
   name: 'DynamicIcon',
@@ -16,15 +16,25 @@ export default defineComponent({
       error: false,
     };
   },
+  watch: {
+    icon() {
+      this.fetchIcon();
+    },
+  },
   created() {
-    import(`../assets/icons/dynamic/icon-${this.icon}.svg`)
-      .then((mod) => {
-        this.module = mod.default || mod;
-      })
-      .catch((e) => {
-        this.error = false;
-        console.error(e);
-      });
+    this.fetchIcon();
+  },
+  methods: {
+    fetchIcon() {
+      import(`../assets/icons/dynamic/icon-${this.icon}.svg`)
+        .then((mod) => {
+          this.module = mod.default || mod;
+        })
+        .catch((e) => {
+          this.error = false;
+          console.error(e);
+        });
+    },
   },
   render() {
     if (this.error) {

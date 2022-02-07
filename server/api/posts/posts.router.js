@@ -1,6 +1,7 @@
 const Express = require('express');
 const bodyParser = require('body-parser');
 const { PostService } = require('./posts.service');
+const { randomString } = require('../../lib/utils');
 
 const app = Express.Router();
 
@@ -20,6 +21,7 @@ app.get('/create', async (req, res) => {
     draftTitle: 'No Title',
     draftContent: 'write anything you with ...',
     authorId: req.session.user.id,
+    slug: randomString(14),
   };
   const result = await PostService.create(post);
   return res.redirect(`/admin/post/${result.id}/edit`);
@@ -61,6 +63,11 @@ app.get('/:postId', async (req, res) => {
 app.delete('/:postId', async (req, res) => {
   const { postId } = req.params;
   const post = await PostService.deleteOne({ id: +postId });
+  res.json(post);
+});
+app.post('/unpublish/:postId', async (req, res) => {
+  const { postId } = req.params;
+  const post = await PostService.updateOne({ id: +postId }, { published: false });
   res.json(post);
 });
 
