@@ -8,6 +8,12 @@
       @deletedPost="$emit('deletedPost',$event)"
       @unPublishedPost="$emit('unPublishedPost',$event)"
     />
+    <div
+      v-if="!posts.length"
+      class="no-data"
+    >
+      nothing yet.
+    </div>
   </div>
 </template>
 <script>
@@ -29,3 +35,9 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.no-data{
+  min-height: 400px;
+  @apply flex justify-center items-center opacity-50;
+}
+</style>
