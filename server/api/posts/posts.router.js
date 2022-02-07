@@ -2,6 +2,7 @@ const Express = require('express');
 const bodyParser = require('body-parser');
 const { PostService } = require('./posts.service');
 const { randomString } = require('../../lib/utils');
+const { authMiddleware } = require('../auth/auth.middleware');
 
 const app = Express.Router();
 
@@ -16,6 +17,14 @@ app.post('/', async (req, res) => {
   }
   res.json(result);
 });
+app.get('/', async (req, res) => {
+  const posts = await PostService.getAll();
+  res.json(posts);
+});
+
+// admin apis from now on
+app.use(authMiddleware);
+
 app.get('/create', async (req, res) => {
   const post = {
     draftTitle: 'No Title',
@@ -47,11 +56,6 @@ app.post('/publish/:id', async (req, res) => {
   post.updatedAt = new Date();
   const result = await PostService.updateOne({ id: +id }, post);
   res.json(result);
-});
-
-app.get('/', async (req, res) => {
-  const posts = await PostService.getAll();
-  res.json(posts);
 });
 
 app.get('/:postId', async (req, res) => {
