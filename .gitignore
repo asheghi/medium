@@ -6,3 +6,4 @@ yarn.lock
 **/*.db
 **/*.db-journal
 sessions
+data
