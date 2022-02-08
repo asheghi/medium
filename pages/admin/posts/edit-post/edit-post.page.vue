@@ -27,6 +27,12 @@
         placeholder="choose a great title"
       >
     </div>
+    <div
+      v-if="!(post && hasMounted)"
+      class="loading-editor"
+    >
+      Loading Editor ...
+    </div>
     <PostEditor
       v-if="post && hasMounted"
       v-model="form.draftContent"
