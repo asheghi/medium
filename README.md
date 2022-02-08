@@ -22,7 +22,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/semycolon/vue3-vite-ssr-blog">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/semycolon/vue3-vite-ssr-blog/master/assets/icons/logo.svg" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Vite SSR Blog</h3>
@@ -74,7 +74,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://image.thum.io/get/maxAge/12/width/700/height/500https://codeify.ir/)
+[![Product Name Screen Shot][product-screenshot]](https://image.thum.io/get/maxAge/12/width/700/height/500https://codeify.ir)
 
 There are many great Blogs available on GitHub; however, 
 I didn't find one that really suited my needs so I created this enhanced one.
