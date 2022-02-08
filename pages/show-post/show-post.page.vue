@@ -27,7 +27,6 @@
 import { usePageContext } from '../../renderer/usePageContext';
 import BlogHeader from '../../components/BlogHeader.vue';
 import BlogFooter from '../../components/BlogFooter.vue';
-import { getImageSrc } from '../../lib/utils';
 
 export default {
   name: 'ShowPost',
@@ -35,7 +34,7 @@ export default {
   setup() {
     const pageContext = usePageContext();
     const { post } = pageContext;
-    return { post, getImageSrc };
+    return { post };
   },
 };
 </script>
