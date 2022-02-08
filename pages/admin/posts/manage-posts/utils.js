@@ -24,3 +24,6 @@ export async function unPublishPost(post) {
 export function formatDateTime(arg) {
   return moment(arg).fromNow();
 }
+
+export const DRAFTS = 'drafts';
+export const PUBLISHED = 'published';

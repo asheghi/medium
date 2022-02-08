@@ -7,10 +7,9 @@
     />
     <div class="below-title">
       <div
-        class="last-update"
-      >
-        updated {{ formatDateTime(post.updatedAt) }}
-      </div>
+        class="date"
+        v-text="dateFormatted"
+      />
       <div class="menu">
         <DynamicIcon
           class="trigger-icon"
@@ -34,7 +33,7 @@
 </template>
 <script>
 import {
-  deletePost, formatDateTime, getTitleLink, unPublishPost,
+  deletePost, DRAFTS, formatDateTime, getTitleLink, PUBLISHED, unPublishPost,
 } from './utils';
 import DynamicIcon from '../../../../components/DynamicIcon';
 
@@ -45,6 +44,7 @@ const UN_POBLISH = 'UnPublish';
 export default {
   name: 'PostItem',
   components: { DynamicIcon },
+  inject: ['currentTab'],
   props: {
     post: {
       type: Object,
@@ -64,6 +64,15 @@ export default {
         return [EDIT_POST, DELETE_POST];
       }
       return [EDIT_POST, UN_POBLISH, DELETE_POST];
+    },
+    dateFormatted() {
+      if (this.currentTab.value === DRAFTS) {
+        return `updated ${formatDateTime(this.post.updatedAt)}`;
+      }
+      if (this.currentTab.value === PUBLISHED) {
+        return `published ${formatDateTime(this.post.publishedAt)}`;
+      }
+      return '';
     },
   },
   methods: {
@@ -99,9 +108,9 @@ export default {
 </script>
 <style lang="scss">
 .menu {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 flex-wrap;
   .item {
-    @apply text-xs opacity-75 hover:opacity-100 text-primary cursor-pointer;
+    @apply text-xs opacity-75 hover:opacity-100 text-primary cursor-pointer whitespace-nowrap;
   }
 }
 
@@ -119,7 +128,7 @@ export default {
 
   .below-title {
     @apply flex items-center gap-1;
-    .last-update {
+    .date {
       @apply text-xs opacity-50;
     }
 

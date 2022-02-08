@@ -14,15 +14,15 @@
     <div class="tabs">
       <div
         class="tab"
-        :class="{active:currentTab === 'drafts'}"
-        @click="currentTab = 'drafts'"
+        :class="{active:currentTab === DRAFTS}"
+        @click="currentTab = DRAFTS"
       >
         Drafts
       </div>
       <div
         class="tab"
-        :class="{active:currentTab === 'published'}"
-        @click="currentTab = 'published'"
+        :class="{active:currentTab === PUBLISHED}"
+        @click="currentTab = PUBLISHED"
       >
         Published
       </div>
@@ -37,9 +37,10 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue';
+import { provide, reactive, ref } from 'vue';
 import { usePageContext } from '../../../../renderer/usePageContext';
 import PostsList from './posts-list.vue';
+import { DRAFTS, PUBLISHED } from './utils';
 
 export default {
   name: 'ListPosts',
@@ -47,20 +48,21 @@ export default {
   setup() {
     const { posts: originalPosts } = usePageContext();
     const posts = ref(originalPosts);
-    return { posts };
-  },
-  data() {
+
+    const currentTab = ref(DRAFTS);
+    provide('currentTab', currentTab);
+
     return {
-      currentTab: 'drafts',
+      posts, currentTab, DRAFTS, PUBLISHED,
     };
   },
   computed: {
     posts_filtered() {
       const { currentTab, posts } = this;
-      if (currentTab === 'drafts') {
+      if (currentTab === DRAFTS) {
         return posts.filter((it) => !it.published);
       }
-      if (currentTab === 'published') {
+      if (currentTab === PUBLISHED) {
         return posts.filter((it) => it.published);
       }
       return posts;
@@ -96,11 +98,12 @@ export default {
   }
 
   .tabs {
-    @apply flex gap-4 pt-2;
+    @apply flex gap-4 pt-6;
     .tab {
-      @apply text-gray-500 cursor-pointer transition-all;
+      @apply text-gray-500 cursor-pointer transition-all text-xl
+      border border-transparent py-1;
       &.active {
-        @apply cursor-default text-primary-600 font-bold;
+        @apply cursor-default text-primary-600 border-b-primary;
       }
     }
   }

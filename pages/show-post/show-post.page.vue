@@ -19,7 +19,7 @@
         v-html="post.content"
       />
     </div>
-    <BlogFooter />
+    <BlogFooter class="footer" />
   </div>
 </template>
 
