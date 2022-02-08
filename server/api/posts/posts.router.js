@@ -8,6 +8,8 @@ const app = Express.Router();
 
 app.use(bodyParser.json());
 
+app.use(authMiddleware);
+
 app.post('/', async (req, res) => {
   const post = req.body;
   post.authorId = req.session.user.id;
@@ -17,13 +19,11 @@ app.post('/', async (req, res) => {
   }
   res.json(result);
 });
+
 app.get('/', async (req, res) => {
   const posts = await PostService.getAll();
   res.json(posts);
 });
-
-// admin apis from now on
-app.use(authMiddleware);
 
 app.get('/create', async (req, res) => {
   const post = {

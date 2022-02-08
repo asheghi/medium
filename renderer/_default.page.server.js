@@ -1,7 +1,8 @@
 import { renderToString } from '@vue/server-renderer';
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr';
 import { createApp } from './app';
-import logoUrl from '../assets/icons/logo.svg';
+// eslint-disable-next-line import/no-unresolved
+import logoUrl from '../assets/icons/logo.svg?url';
 
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = ['pageProps', 'urlPathname'];

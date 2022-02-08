@@ -141,8 +141,8 @@ export default {
       if (!this.form.draftTitle) this.form.draftTitle = post.title;
       if (!this.form.draftContent) this.form.draftContent = post.content;
       if (!this.slug) this.slug = slugify(this.form.draftTitle);
-      this.hasMounted = true;
     }
+    this.hasMounted = true;
   },
   methods: {
     async saveDraft() {
