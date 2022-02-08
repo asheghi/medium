@@ -27,8 +27,8 @@ app.get('/', async (req, res) => {
 
 app.get('/create', async (req, res) => {
   const post = {
-    draftTitle: 'No Title',
-    draftContent: 'write anything you with ...',
+    draftTitle: 'Untitled',
+    draftContent: 'Put down what you want to say ...',
     authorId: req.session.user.id,
     slug: randomString(14),
   };
