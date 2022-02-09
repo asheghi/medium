@@ -173,21 +173,28 @@
     >
       +
     </div>
+    <TModal
+      ref="modal"
+      class="MediaModal"
+    >
+      <InsertMedia />
+    </TModal>
   </div>
 </template>
 
 <script>
-import {
-  Editor, EditorContent, BubbleMenu,
-} from '@tiptap/vue-3';
+import { BubbleMenu, Editor, EditorContent } from '@tiptap/vue-3';
 import ImageExtension from '@tiptap/extension-image';
 import StarterKit from '@tiptap/starter-kit';
 import DynamicIcon from '../../../../components/DynamicIcon';
+import TModal from '../../../../components/modal.vue';
+import InsertMedia from './InsertMedia.vue';
 
 export default {
   name: 'PostEditor',
   components: {
-    DynamicIcon,
+    InsertMedia,
+    TModal,
     EditorContent,
     BubbleMenu,
     Icon: DynamicIcon,
@@ -238,6 +245,7 @@ export default {
       this.updateIconPosition();
       this.updateShowIconState();
     });
+  //  this.$refs.modal.show();
   },
   beforeUnmount() {
     if (this.editor) this.editor.destroy();
@@ -346,7 +354,6 @@ export default {
       }
     }
   }
-
 }
 
 </style>

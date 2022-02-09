@@ -1,0 +1,166 @@
+<template>
+  <div class="AddMedia">
+    <div class="tabs">
+      <div
+        :class="{active:currentTab === TAB_UPLOAD}"
+        class="tab"
+        @click="currentTab = TAB_UPLOAD"
+      >
+        from computer
+      </div>
+      <div
+        :class="{active:currentTab === TAB_URL}"
+        class="tab"
+        @click="currentTab = TAB_URL"
+      >
+        from url
+      </div>
+    </div>
+    <div class="content">
+      <div
+        v-if="currentTab === TAB_UPLOAD"
+        class="upload-content"
+      >
+        <div
+          class="drop-area"
+          @dragover.prevent
+          @drop.prevent="addFile"
+        >
+          <div class="inside">
+            <DynamicIcon
+              class="icon"
+              icon="image"
+              width="56"
+              height="56"
+            />
+            <div class="text">
+              Drag and Drop here or
+            </div>
+            <div
+              type="file"
+              class="button"
+            >
+              Browse Files
+            </div>
+            <input
+              ref="inputFile"
+              hidden
+              type="file"
+            >
+          </div>
+        </div>
+        <ul class="files">
+          <li
+            v-for="(file,index) in files"
+            :key="index"
+            class="file"
+          >
+            {{ file.name }} ({{ kb(file.size) }} kb)
+            <button
+              title="Remove"
+              @click="removeFile(file)"
+            >
+              X
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div
+        v-if="currentTab === TAB_URL"
+        class="from-url-content"
+      >
+        <input
+          type="text"
+          placeholder="link"
+        >
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import DynamicIcon from '../../../../components/DynamicIcon';
+
+const TAB_UPLOAD = 'upload';
+const TAB_URL = 'url';
+
+export default {
+  name: 'AddMedia',
+  components: { DynamicIcon },
+  data() {
+    return {
+      currentTab: TAB_UPLOAD,
+      TAB_UPLOAD,
+      TAB_URL,
+      files: [],
+    };
+  },
+  methods: {
+    addFile(e) {
+      const droppedFiles = e.dataTransfer.files;
+      if (!droppedFiles) return;
+      this.files.push(...droppedFiles);
+    },
+    removeFile(file) {
+      this.files = this.files.filter((f) => f !== file);
+    },
+    upload() {
+      const formData = new FormData();
+      this.files.forEach((f, x) => {
+        formData.append(`file${x + 1}`, f);
+      });
+
+      fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log('done uploading', res);
+        })
+        .catch((e) => {
+          console.error(JSON.stringify(e.message));
+        });
+    },
+    kb(length) {
+      return Math.floor(length / 1024);
+    },
+  },
+};
+</script>
+<style lang="scss">
+.AddMedia {
+  min-width: 400px;
+  min-height: 360px;
+  @apply px-8 py-4;
+  .tabs {
+    @apply flex gap-2;
+    .tab {
+      @apply px-2 py-1 rounded text-sm  opacity-50 capitalize cursor-pointer;
+      &.active {
+        @apply bg-primary text-white opacity-100 ;
+      }
+    }
+  }
+
+  .content {
+    .upload-content {
+      @apply py-4;
+      .drop-area {
+        @apply border h-56 rounded-2xl border-dashed border-2 border-primary;
+        .inside{
+          @apply flex flex-col justify-center items-center h-full gap-3;
+          .icon{
+              fill:theme('colors.primary.400')
+          }
+          .text{
+            @apply text-gray-500
+          }
+          .button{
+            @apply bg-primary text-white px-3 py-1 rounded;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
