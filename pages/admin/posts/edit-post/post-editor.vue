@@ -127,6 +127,7 @@
     </div>
     <bubble-menu
       v-if="editor"
+      ref="topMenu"
       class="bubble-menu"
       :editor="editor"
     >
@@ -165,10 +166,10 @@
       :editor="editor"
     />
     <div
-      v-if="showIcon"
+      v-show="showIcon"
       ref="iconPlus"
       class="icon-plus"
-      @click="addImage"
+      @click.prevent.stop="addImage"
     >
       +
     </div>
@@ -186,7 +187,10 @@ import DynamicIcon from '../../../../components/DynamicIcon';
 export default {
   name: 'PostEditor',
   components: {
-    EditorContent, BubbleMenu, Icon: DynamicIcon,
+    DynamicIcon,
+    EditorContent,
+    BubbleMenu,
+    Icon: DynamicIcon,
   },
   props: {
     modelValue: {
@@ -198,8 +202,12 @@ export default {
   data() {
     return {
       editor: null,
-      showIcon: true,
+      showIcon: false,
+      focused: false,
     };
+  },
+  computed: {
+
   },
   async mounted() {
     this.editor = new Editor({
@@ -217,24 +225,33 @@ export default {
         this.$emit('update:modelValue', editor.getHTML());
       },
     });
-    window.editor = this.editor;
     await this.$nextTick();
-    // console.log('element:', element);
+    window.e = this.editor;
+    this.editor.on('focus', () => {
+      this.focused = true;
+      this.updateIconPosition();
+    });
+    this.editor.on('blur', () => {
+      this.focused = false;
+    });
     this.editor.on('transaction', () => {
-      /* try {
-        const { view } = this.editor;
-        const { state } = view;
-
-        // Sometime check for `empty` is not enough.
-        // Doubleclick an empty paragraph returns a node size of 2.
-        // So we check also for an empty text size.
-        const isEmptyTextBlock = isTextSelection(state.selection);
-
-        this.showIcon = !!(state?.selection?.empty /!* || isEmptyTextBlock *!/);
-        console.log('showIcon', this.showIcon);
-      } catch (e) {
-        console.error(e);
-      } */
+      this.updateIconPosition();
+      this.updateShowIconState();
+    });
+  },
+  beforeUnmount() {
+    if (this.editor) this.editor.destroy();
+  },
+  methods: {
+    addImage() {
+      const url = window.prompt('URL');
+      if (url) {
+        this.editor.chain().focus().setImage({ src: url }).run();
+      }
+    },
+    updateIconPosition() {
+      const topMenuPos = document.querySelector('.top-menu').getBoundingClientRect();
+      const topMenuBottom = topMenuPos.bottom + 15;
 
       try {
         const selection = window?.getSelection();
@@ -247,21 +264,27 @@ export default {
         } else {
           pos = anchorNode.parentNode.getBoundingClientRect();
         }
-        this.$refs.iconPlus.style.top = `${pos.top + window.scrollY}px`;
-        this.$refs.iconPlus.style.left = `${Math.floor(pos.left - 70)}px`;
+
+        let iconTop = pos.top + window.scrollY;
+        if (iconTop < topMenuBottom) {
+          iconTop = topMenuBottom;
+        }
+        this.$refs.iconPlus.style.top = `${iconTop}px`;
+        this.$refs.iconPlus.style.left = `${Math.floor(topMenuPos.left - 48)}px`;
+      } catch (e) {
+        // console.error(e);
+        this.$refs.iconPlus.style.top = `${topMenuBottom + 18}px`;
+        this.$refs.iconPlus.style.left = `${Math.floor(topMenuPos.left - 48)}px`;
+      }
+    },
+    updateShowIconState() {
+      try {
+        const { view } = this.editor;
+        const { state } = view;
+        this.showIcon = !state?.selection?.ranges[0].$from.parent.textContent.trim();
       } catch (e) {
         console.error(e);
-      }
-    });
-  },
-  beforeUnmount() {
-    if (this.editor) this.editor.destroy();
-  },
-  methods: {
-    addImage() {
-      const url = window.prompt('URL');
-      if (url) {
-        this.editor.chain().focus().setImage({ src: url }).run();
+        this.showIcon = false;
       }
     },
   },
@@ -281,9 +304,16 @@ export default {
     }
   }
   .icon-plus{
-    @apply absolute cursor-pointer text-2xl font-bold shadow
+    @apply absolute transition transform cursor-pointer text-2xl font-bold shadow
     bg-gradient-to-t from-primary to-primary-300 flex justify-center
-    items-center text-white bg-primary rounded-full w-8 h-8;
+    items-center text-white bg-primary rounded-full w-8 h-8 opacity-50;
+    &:hover{
+      @apply shadow opacity-100 scale-110;
+    }
+
+    .icon-plus-content{
+      @apply absolute left-8;
+    }
   };
 }
 
