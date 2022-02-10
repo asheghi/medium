@@ -1,6 +1,6 @@
 <template>
   <div class="InsertMedia">
-    <MediaLibrary />
+    <MediaLibrary @select="$emit('select',$event)" />
     <AddMedia />
   </div>
 </template>
@@ -11,6 +11,7 @@ import AddMedia from './AddMedia.vue';
 export default {
   name: 'InsertMedia',
   components: { AddMedia, MediaLibrary },
+  emits: ['select'],
 };
 </script>
 <style lang="scss">

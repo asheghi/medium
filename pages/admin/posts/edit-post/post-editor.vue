@@ -169,7 +169,7 @@
       v-show="showIcon"
       ref="iconPlus"
       class="icon-plus"
-      @click.prevent.stop="addImage"
+      @click.prevent.stop="showMediaModal"
     >
       +
     </div>
@@ -177,7 +177,7 @@
       ref="modal"
       class="MediaModal"
     >
-      <InsertMedia />
+      <InsertMedia @select="addImage" />
     </TModal>
   </div>
 </template>
@@ -245,14 +245,13 @@ export default {
       this.updateIconPosition();
       this.updateShowIconState();
     });
-  //  this.$refs.modal.show();
   },
   beforeUnmount() {
     if (this.editor) this.editor.destroy();
   },
   methods: {
-    addImage() {
-      const url = window.prompt('URL');
+    addImage(url) {
+      this.$refs.modal.hide();
       if (url) {
         this.editor.chain().focus().setImage({ src: url }).run();
       }
@@ -294,6 +293,9 @@ export default {
         console.error(e);
         this.showIcon = false;
       }
+    },
+    showMediaModal() {
+      this.$refs.modal.show();
     },
   },
 };

@@ -32,11 +32,14 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Session" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "sid" TEXT NOT NULL,
-    "data" TEXT NOT NULL,
-    "expiresAt" DATETIME NOT NULL
+CREATE TABLE "Image" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "filename" TEXT NOT NULL,
+    "alt" TEXT,
+    "format" TEXT,
+    "size" INTEGER,
+    "width" INTEGER,
+    "height" INTEGER
 );
 
 -- CreateIndex
@@ -49,4 +52,4 @@ CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_sid_key" ON "Session"("sid");
+CREATE UNIQUE INDEX "Image_filename_key" ON "Image"("filename");

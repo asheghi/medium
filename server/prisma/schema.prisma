@@ -42,10 +42,13 @@ model User {
   Profile Profile?
 }
 
-//cookie session
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt   DateTime
+model Image {
+  id            Int     @id @default(autoincrement())
+  filename      String  @unique
+  createdAt     DateTime @default(now())
+  alt           String?
+  format        String?
+  size          Int?
+  width         Int?
+  height        Int?
 }

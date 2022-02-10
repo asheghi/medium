@@ -39,6 +39,7 @@
             <div
               type="file"
               class="button"
+              @click="$refs.inputFile.click()"
             >
               Browse Files
             </div>
@@ -46,24 +47,18 @@
               ref="inputFile"
               hidden
               type="file"
+              @change="addFileInput"
             >
           </div>
         </div>
-        <ul class="files">
-          <li
+        <div class="files">
+          <fileUpload
             v-for="(file,index) in files"
             :key="index"
-            class="file"
-          >
-            {{ file.name }} ({{ kb(file.size) }} kb)
-            <button
-              title="Remove"
-              @click="removeFile(file)"
-            >
-              X
-            </button>
-          </li>
-        </ul>
+            :file="file"
+            @remove="removeFile($event)"
+          />
+        </div>
       </div>
       <div
         v-if="currentTab === TAB_URL"
@@ -79,13 +74,14 @@
 </template>
 <script>
 import DynamicIcon from '../../../../components/DynamicIcon';
+import FileUpload from './FileUpload.vue';
 
 const TAB_UPLOAD = 'upload';
 const TAB_URL = 'url';
 
 export default {
   name: 'AddMedia',
-  components: { DynamicIcon },
+  components: { FileUpload, DynamicIcon },
   data() {
     return {
       currentTab: TAB_UPLOAD,
@@ -121,8 +117,11 @@ export default {
           console.error(JSON.stringify(e.message));
         });
     },
-    kb(length) {
-      return Math.floor(length / 1024);
+    addFileInput(e) {
+      const { files } = e.target;
+      if (files) {
+        this.files.push(...files);
+      }
     },
   },
 };
@@ -144,9 +143,9 @@ export default {
 
   .content {
     .upload-content {
-      @apply py-4;
+      @apply py-1;
       .drop-area {
-        @apply border h-56 rounded-2xl border-dashed border-2 border-primary;
+        @apply border mt-8 h-56 rounded-2xl border-dashed border-2 border-primary;
         .inside{
           @apply flex flex-col justify-center items-center h-full gap-3;
           .icon{
@@ -156,7 +155,7 @@ export default {
             @apply text-gray-500
           }
           .button{
-            @apply bg-primary text-white px-3 py-1 rounded;
+            @apply cursor-pointer bg-primary text-white px-3 py-1 rounded;
           }
         }
       }
