@@ -44,7 +44,8 @@ async function startServer() {
       url,
     };
     const pageContext = await renderPage(pageContextInit);
-    const { httpResponse } = pageContext;
+    const { httpResponse, redirect } = pageContext;
+    if (redirect) return res.redirect(redirect);
     if (!httpResponse) return next();
     const { body, statusCode, contentType } = httpResponse;
     return res.status(statusCode).type(contentType).send(body);
