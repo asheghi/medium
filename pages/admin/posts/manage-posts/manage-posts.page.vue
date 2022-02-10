@@ -60,7 +60,7 @@ export default {
     posts_filtered() {
       const { currentTab, posts } = this;
       if (currentTab === DRAFTS) {
-        return posts.filter((it) => it.published.draftTitle || it.published.draftContent);
+        return posts.filter((it) => it.draftTitle || it.draftContent);
       }
       if (currentTab === PUBLISHED) {
         return posts.filter((it) => it.published);
