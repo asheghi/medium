@@ -1,42 +1,52 @@
 <template>
   <div class="LoginPage">
-    <div class="box">
-      <div
-        class="head"
-        v-text="'login'"
-      />
-      <div class="form">
-        <div class="block">
-          <div
-            class="label"
-            v-text="'Email'"
-          />
+    <form @submit.prevent="submit">
+      <div class="head">
+        <h2>Login </h2>
+        <p>
+          Lorem ipsum dolor sit amet
+        </p>
+      </div>
+      <div>
+        <div class="form-group">
+          <label
+            for="email"
+            class="form-label"
+          >Email address</label>
           <input
+            id="email"
             v-model="form.email"
+            :disabled="loading"
             type="email"
-            name="email"
-            placeholder="Email"
+            class="input"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
           >
         </div>
-        <div class="block">
-          <div
-            class="label"
-            v-text="'Password'"
-          />
+        <div class="form-group">
+          <label
+            for="password"
+            class="form-label"
+          >Password</label>
           <input
+            id="password"
             v-model="form.password"
+            :disabled="loading"
             type="password"
-            name="password"
+            class="input"
             placeholder="Password"
           >
         </div>
       </div>
-      <div
-        class="submit"
-        @click="submit"
-        v-text="'continue'"
-      />
-    </div>
+      <button
+        type="submit"
+        class="button"
+        :disabled="loading"
+        :class="{loading}"
+      >
+        {{ loading ? 'Processing ...' : 'Continue' }}
+      </button>
+    </form>
   </div>
 </template>
 
@@ -57,11 +67,17 @@ export default {
   methods: {
     async submit() {
       this.loading = true;
-      const { status, data } = await ax.post('auth/login', this.form);
-      if (status === 200) {
-        window.location.href = '/admin';
-      } else {
-        alert('oops, not what you thought!');
+      try {
+        const { status, data } = await ax.post('auth/login', this.form);
+        if (status === 200) {
+          window.location.href = '/admin';
+        } else {
+          alert('oops, not what you thought!');
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loading = false;
       }
     },
   },
@@ -70,29 +86,41 @@ export default {
 
 <style lang="scss">
 .LoginPage {
-  @apply min-h-screen flex justify-center items-center bg-gray-400;
-  .box {
-    @apply px-6 py-8 border rounded-xl shadow-lg bg-white flex flex-col gap-8;
+  @apply flex justify-center items-center min-h-screen;
+  form {
+    @apply flex flex-col gap-8 items-start
+    border border-primary px-12 py-10 rounded-xl border-dashed;
     .head{
-      @apply text-center capitalize text-2xl;
-    }
-    .form {
-      @apply flex flex-col gap-4;
-      .block {
-        .label{
-          @apply text-xs opacity-30 mb-1;
-        }
-        input {
-          @apply rounded border border-gray-400 px-2 py-1 ring-0;
-        }
+      h2{
+        @apply font-bold opacity-75 text-lg;
       }
-
+      p{
+        @apply opacity-50 text-sm;
+      }
     }
-    .submit{
-         @apply cursor-pointer bg-primary rounded text-white text-center
-         px-4 py-1 capitalize text-lg;
-       }
+    .form-group{
+      @apply flex flex-col py-2;
+      .form-label{
+        @apply text-xs opacity-50 mb-2;
+      }
+    }
+    input {
+      @apply px-2 py-1 border rounded border-gray-300 ring-0 outline-primary;
+    }
+
+    .button {
+      @apply border border-primary transition bg-primary text-white px-4 py-1 rounded text-lg;
+      &:hover,&:focus{
+        @apply bg-white text-primary border border-primary;
+      }
+      &:active{
+        @apply scale-90;
+      }
+      &.loading{
+        @apply bg-primary text-white border border-primary opacity-50;
+        @apply scale-100;
+      }
+    }
   }
 }
-
 </style>
