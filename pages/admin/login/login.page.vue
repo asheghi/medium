@@ -105,7 +105,7 @@ export default {
       }
     }
     input {
-      @apply px-2 py-1 border rounded border-gray-300 ring-0 outline-primary;
+      @apply px-2 bg-gray-100 py-1 border rounded border-gray-300 ring-0 outline-primary;
     }
 
     .button {

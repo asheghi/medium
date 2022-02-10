@@ -36,6 +36,11 @@ app.post('/upload', upload.any(), async (req, res) => {
   res.json(images);
 });
 
+app.post('/fromUrl', async (req, res) => {
+  // todo download images from request.body
+  // handle images like handleUploadedFile
+});
+
 app.get('/', async (req, res) => {
   const images = await prisma.image.findMany();
   res.json(images);

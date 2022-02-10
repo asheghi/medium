@@ -206,7 +206,8 @@ export default {
 
 .Modal {
   .modal-box {
-    @apply bg-red-500 p-12;
+    @apply bg-red-500;
+    padding: 0!important;
   }
 }
 </style>

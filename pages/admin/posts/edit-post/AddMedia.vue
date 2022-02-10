@@ -65,9 +65,14 @@
         class="from-url-content"
       >
         <input
+          v-model="fromUrl"
           type="text"
           placeholder="link"
         >
+        <button
+          class="button"
+          @click="insertFromUrl"
+        />
       </div>
     </div>
   </div>
@@ -88,6 +93,7 @@ export default {
       TAB_UPLOAD,
       TAB_URL,
       files: [],
+      fromUrl: '',
     };
   },
   methods: {
@@ -123,6 +129,9 @@ export default {
         this.files.push(...files);
       }
     },
+    insertFromUrl() {
+
+    },
   },
 };
 </script>
@@ -130,7 +139,7 @@ export default {
 .AddMedia {
   min-width: 400px;
   min-height: 360px;
-  @apply px-8 py-4;
+  @apply px-8;
   .tabs {
     @apply flex gap-2;
     .tab {
@@ -158,6 +167,12 @@ export default {
             @apply cursor-pointer bg-primary text-white px-3 py-1 rounded;
           }
         }
+      }
+    }
+    .from-url-content{
+      @apply py-4;
+      input{
+        @apply border px-2 py-1 rounded bg-gray-100;
       }
     }
   }
