@@ -15,7 +15,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN npx prisma generate --schema ./server/prisma/schema.prisma
+#added to npm build script
+#RUN npx prisma generate --schema ./server/prisma/schema.prisma
 
 RUN npm run build
 
