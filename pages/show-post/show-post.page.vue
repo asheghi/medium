@@ -41,11 +41,14 @@ export default {
 
 <style lang="scss">
 .ShowPost{
-  @apply mx-auto;
-  max-width: 720px;
+  @apply container mx-auto;
 
   .content{
     @apply mt-12;
   }
+}
+hr{
+  width: 340px;
+  margin: 0 auto;
 }
 </style>

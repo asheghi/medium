@@ -29,7 +29,7 @@
     </div>
     <div
       v-if="!(post && hasMounted)"
-      class="loading-editor"
+      class="loading-editor px-4 opacity-75 animate-pulse"
     >
       Loading Editor ...
     </div>
@@ -188,7 +188,7 @@ export default {
   max-width: 700px;
 
   .top {
-    @apply px-4;
+    @apply px-0;
     .btn {
       @apply rounded px-2 py-1  capitalize text-primary border-primary
       hover:shadow-lg active:shadow-sm hover:bg-primary active:scale-95
@@ -199,7 +199,7 @@ export default {
   .title {
     @apply w-full mb-8;
     input {
-      @apply w-full rounded-xl py-4 px-4 text-2xl outline-0;
+      @apply w-full rounded-xl py-4 px-0 text-2xl outline-0;
     }
   }
 }

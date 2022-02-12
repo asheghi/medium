@@ -131,36 +131,147 @@
       class="bubble-menu"
       :editor="editor"
     >
-      <button
-        :class="{ 'active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
-      >
-        <Icon
-          width="24"
-          height="24"
-          icon="bold"
-        />
-      </button>
-      <button
-        :class="{ 'active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <Icon
-          width="24"
-          height="24"
-          icon="italic"
-        />
-      </button>
-      <button
-        :class="{ 'active': editor.isActive('strike') }"
-        @click="editor.chain().focus().toggleStrike().run()"
-      >
-        <Icon
-          width="24"
-          height="24"
-          icon="strike"
-        />
-      </button>
+      <div class="group">
+        <button
+          :class="{ 'active': editor.isActive('bold') }"
+          @click="editor.chain().focus().toggleBold().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="bold"
+          />
+        </button>
+        <button
+          :class="{ 'active': editor.isActive('italic') }"
+          @click="editor.chain().focus().toggleItalic().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="italic"
+          />
+        </button>
+        <button
+          :class="{ 'active': editor.isActive('strike') }"
+          @click="editor.chain().focus().toggleStrike().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="strike"
+          />
+        </button>
+      </div>
+      <div class="group">
+        <button
+          class="h3"
+          :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+        >
+          <span class="icon"> T</span>
+        </button>
+        <button
+          class="h4"
+          :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+        >
+          <span class="icon small">
+            T
+          </span>
+        </button>
+      </div>
+      <div class="group">
+        <button
+          :class="{ 'is-active': editor.isActive('bulletList') }"
+          @click="editor.chain().focus().toggleBulletList().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="bulleted"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive('orderedList') }"
+          @click="editor.chain().focus().toggleOrderedList().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="numbered"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive('codeBlock') }"
+          @click="editor.chain().focus().toggleCodeBlock().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="code"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive('blockquote') }"
+          @click="editor.chain().focus().toggleBlockquote().run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="quotes"
+          />
+        </button>
+      </div>
+      <div class="group text-align">
+        <button
+          :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
+          @click="editor.chain().focus().setTextAlign('left').run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="text-align-left"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
+          @click="editor.chain().focus().setTextAlign('center').run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="text-align-center"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
+          @click="editor.chain().focus().setTextAlign('right').run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="text-align-right"
+          />
+        </button>
+        <button
+          :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }"
+          @click="editor.chain().focus().setTextAlign('justify').run()"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="text-align-justify"
+          />
+        </button>
+        <!--        <button @click="editor.chain().focus().unsetTextAlign().run()">
+          <Icon
+            width="24"
+            height="24"
+            icon="strike"
+          />
+        </button>-->
+      </div>
     </bubble-menu>
     <editor-content
       :editor="editor"
@@ -186,9 +297,14 @@
 import { BubbleMenu, Editor, EditorContent } from '@tiptap/vue-3';
 import ImageExtension from '@tiptap/extension-image';
 import StarterKit from '@tiptap/starter-kit';
-import DynamicIcon from '../../../../components/DynamicIcon';
-import TModal from '../../../../components/modal.vue';
+import Document from '@tiptap/extension-document';
+import Paragraph from '@tiptap/extension-paragraph';
+import Heading from '@tiptap/extension-heading';
+import Text from '@tiptap/extension-text';
+import TextAlign from '@tiptap/extension-text-align';
 import InsertMedia from './InsertMedia.vue';
+import TModal from '../../../../components/modal.vue';
+import DynamicIcon from '../../../../components/DynamicIcon';
 
 export default {
   name: 'PostEditor',
@@ -227,6 +343,13 @@ export default {
       extensions: [
         StarterKit,
         ImageExtension,
+        Document,
+        Paragraph,
+        Text,
+        Heading,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
       ],
       onUpdate: ({ editor }) => {
         this.$emit('update:modelValue', editor.getHTML());
@@ -280,7 +403,7 @@ export default {
         this.$refs.iconPlus.style.left = `${Math.floor(topMenuPos.left - 48)}px`;
       } catch (e) {
         // console.error(e);
-        this.$refs.iconPlus.style.top = `${topMenuBottom + 18}px`;
+        this.$refs.iconPlus.style.top = `${topMenuBottom + 9}px`;
         this.$refs.iconPlus.style.left = `${Math.floor(topMenuPos.left - 48)}px`;
       }
     },
@@ -303,8 +426,11 @@ export default {
 
 <style lang="scss">
 .PostEditor {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-4 container mx-auto;
   .top-menu{
+    width: 0;
+    height: 0;
+    overflow: hidden;
     @apply flex flex-wrap gap-2;
     button{
       @apply border rounded px-2 py-1;
@@ -331,14 +457,22 @@ export default {
 .ProseMirror {
   max-width: 100vw;
   width: 100%;
-  @apply w-full border-gray-200 px-4 py-2 m-0;
+  @apply w-full border border-dashed rounded-xl border-gray-300 px-4 py-2 m-0;
   /*> * + * {
     margin-top: 0.75em;
   }*/
 }
 
 .bubble-menu {
-  @apply flex gap-1 px-1 py-1 bg-white shadow border border-gray-400 rounded;
+  @apply flex bg-white px-1 py-1 shadow-lg transition-all transition border border-gray-400 rounded gap-3;
+  min-width: 400px;
+  & > div{
+    @apply flex gap-1;
+  }
+  .small{
+    @apply transform scale-[.85];
+    transform-origin: bottom;
+  }
   button {
     @apply flex justify-center items-center rounded text-primary;
     width: 24px;
@@ -357,5 +491,8 @@ export default {
     }
   }
 }
-
+hr{
+  width: 340px;
+  margin: 0 auto;
+}
 </style>
