@@ -16,38 +16,17 @@
     </a>
     <div class="links">
       <a
-        v-if="twitterLink"
-        :href="twitterLink"
-        class="item twitter"
+        v-for="(item,index) in navLinks"
+        :key="index"
+        :href="item.link"
+        class="item"
+        target="_blank"
       >
-        <IconTwitter
+        <component
+          :is="item.icon"
           width="24"
           height="24"
           icon="twitter"
-        />
-      </a>
-
-      <a
-        v-if="githubLink"
-        :href="githubLink"
-        class="item github"
-      >
-        <IconGithub
-          width="24"
-          height="24"
-          icon="github"
-        />
-      </a>
-
-      <a
-        v-if="linkedinLink"
-        :href="linkedinLink"
-        class="item linkedin"
-      >
-        <IconLinkedin
-          width="24"
-          height="24"
-          icon="linkedin"
         />
       </a>
     </div>
@@ -63,6 +42,20 @@ import IconTwitter from '../assets/icons/dynamic/icon-twitter.svg';
 import IconGithub from '../assets/icons/dynamic/icon-github.svg';
 import IconLinkedin from '../assets/icons/dynamic/icon-linkedin.svg';
 
+const navLinks = [
+  {
+    link: twitterLink,
+    icon: IconTwitter,
+  },
+  {
+    link: githubLink,
+    icon: IconGithub,
+  },
+  {
+    link: linkedinLink,
+    icon: IconLinkedin,
+  },
+];
 export default {
   name: 'BlogHeader',
   components: {
@@ -73,7 +66,7 @@ export default {
   },
   setup() {
     return {
-      brandName, githubLink, twitterLink, linkedinLink,
+      brandName, navLinks,
     };
   },
 };
