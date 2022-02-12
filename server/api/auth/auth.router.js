@@ -5,6 +5,7 @@ const { AuthService } = require('./auth.service');
 const { JwtUtils } = require('../../lib/jwt-utils');
 const { jwtCookieField } = require('../../server-conf');
 const { getServerDebug } = require('../../lib/utils');
+
 const debug = getServerDebug('auth:router');
 const cookieMaxAge = 12 * 60 * 60 * 1000;
 

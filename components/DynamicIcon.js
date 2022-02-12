@@ -31,8 +31,7 @@ export default defineComponent({
           this.module = mod.default || mod;
         })
         .catch((e) => {
-          this.error = false;
-          console.error(e);
+          this.error = true;
         });
     },
   },
