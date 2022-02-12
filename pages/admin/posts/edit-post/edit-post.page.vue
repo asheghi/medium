@@ -188,8 +188,7 @@ export default {
 </script>
 <style lang="scss">
 .EditPost {
-  @apply mx-auto flex flex-col;
-  max-width: 700px;
+  @apply mx-auto container flex flex-col px-4 lg:px-0;
 
   .top {
     @apply px-0;
