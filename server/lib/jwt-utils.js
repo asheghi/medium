@@ -33,6 +33,7 @@ module.exports.JwtUtils = {
     return true;
   },
   verifyToken(token) {
+    if (!token) return false;
     let valid = false;
     try {
       jwt.verify(token, jwtSecret);

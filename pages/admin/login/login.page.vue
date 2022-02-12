@@ -52,8 +52,10 @@
 
 <script>
 import { ax } from '../../../lib/plugins/axios';
+import { defaultSiteTitle } from '../../../lib/config';
 
 export default {
+  pageTitle: `Login to ${defaultSiteTitle}`,
   name: 'LoginPage',
   data() {
     return {

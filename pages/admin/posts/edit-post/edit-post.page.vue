@@ -90,10 +90,13 @@ import PostEditor from './post-editor.vue';
 import { getDebug, parseAxiosError } from '../../../../lib/utils';
 import LogoIcon from '../../../../assets/icons/logo.svg';
 import Modal from '../../../../components/Modal.vue';
-import { domain } from '../../../../lib/config';
+import { defaultSiteTitle, domain } from '../../../../lib/config';
 
 const debug = getDebug('edit-post', 'page');
 export default {
+  pageTitle({ post }) {
+    return `Edit Post - ${post.title || defaultSiteTitle}`;
+  },
   name: 'EditPost',
   components: { PostEditor, LogoIcon, Modal },
   setup() {

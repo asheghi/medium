@@ -7,14 +7,32 @@ import logoUrl from '../assets/icons/logo.svg?url';
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = ['pageProps', 'urlPathname'];
 
+function getPageTitle(pageContext) {
+  const def = process.env.VITE_SITE_TITLE;
+  const { Page } = pageContext;
+  const { pageTitle: title } = Page;
+  if (!title) return def;
+  if (typeof title === 'function') return title(pageContext) || def;
+  if (typeof title === 'string') return title || def;
+  return def;
+}
+
+function getPageDesc(pageContext) {
+  const def = process.env.VITE_SITE_DESCRIPTION;
+  const { Page } = pageContext;
+  const { pageDesc: desc } = Page;
+  if (!desc) return def;
+  if (typeof desc === 'function') return desc(pageContext) || def;
+  if (typeof desc === 'string') return desc || def;
+  return def;
+}
+
 async function render(pageContext) {
   const app = createApp(pageContext);
   const appHtml = await renderToString(app);
 
-  // See https://vite-plugin-ssr.com/head
-  const { documentProps } = pageContext;
-  const title = (documentProps && documentProps.title) || 'Vite SSR app';
-  const desc = (documentProps && documentProps.description) || 'App using Vite + vite-plugin-ssr';
+  const title = getPageTitle(pageContext);
+  const desc = getPageDesc(pageContext);
 
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">

@@ -29,8 +29,15 @@
 import { usePageContext } from '../../renderer/usePageContext';
 import BlogHeader from '../../components/BlogHeader.vue';
 import BlogFooter from '../../components/BlogFooter.vue';
+import { defaultSiteTitle } from '../../lib/config';
 
 export default {
+  pageTitle({ post }) {
+    return `${post.title} - ${defaultSiteTitle}`;
+  },
+  pageDesc({ post }) {
+    return post.summary;
+  },
   name: 'ShowPost',
   components: { BlogFooter, BlogHeader },
   setup() {

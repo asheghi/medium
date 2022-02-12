@@ -17,5 +17,10 @@ export default {
       default: false,
     },
   },
+  pageTitle(ctx) {
+    const { is404 } = ctx.pageProps;
+    if (is404) return 'Page not Found!';
+    return 'Something went wrong!';
+  },
 };
 </script>

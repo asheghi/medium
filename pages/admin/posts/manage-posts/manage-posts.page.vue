@@ -41,8 +41,10 @@ import { provide, reactive, ref } from 'vue';
 import { usePageContext } from '../../../../renderer/usePageContext';
 import PostsList from './posts-list.vue';
 import { DRAFTS, PUBLISHED } from './utils';
+import { defaultSiteTitle } from '../../../../lib/config';
 
 export default {
+  pageTitle: `Dashboard - ${defaultSiteTitle}`,
   name: 'ListPosts',
   components: { PostsList },
   setup() {

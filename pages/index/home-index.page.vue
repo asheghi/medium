@@ -65,6 +65,7 @@ import HomePostItem from './HomePostItem.vue';
 import FreshIcon from '../../assets/icons/dynamic/icon-fresh.svg';
 import OldIcon from '../../assets/icons/dynamic/icon-old.svg';
 import GhostIcon from '../../assets/icons/dynamic/icon-ghost.svg';
+import { defaultSiteTitle } from '../../lib/config';
 
 export default {
   components: {
@@ -77,6 +78,13 @@ export default {
       page,
       pageCount,
     };
+  },
+  pageTitle(ctx) {
+    const { page } = ctx;
+    if (page > 1) {
+      return `${defaultSiteTitle} - Page ${page}`;
+    }
+    return `${defaultSiteTitle} - Home Page`;
   },
 };
 </script>

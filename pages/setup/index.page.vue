@@ -52,8 +52,10 @@
 
 <script>
 import { ax } from '../../lib/plugins/axios';
+import { defaultSiteTitle } from '../../lib/config';
 
 export default {
+  siteTitle: `${defaultSiteTitle} - Setup`,
   name: 'SetupPage',
   data() {
     return {
