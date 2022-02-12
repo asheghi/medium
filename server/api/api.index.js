@@ -7,7 +7,7 @@ const baseUrlApi = '/api';
 const app = Express.Router();
 
 // simulate slow network on dev mode
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.SIMULATE_SLOW_NETWORK) {
   app.use(baseUrlApi, async (req, res, next) => {
     setTimeout(next, 1500);
   });

@@ -3,7 +3,7 @@
     <a
       :href="getTitleLink(post)"
       class="title"
-      v-text="post.title || 'No Title'"
+      v-text="title"
     />
     <div class="below-title">
       <div
@@ -71,6 +71,18 @@ export default {
       }
       if (this.currentTab.value === PUBLISHED) {
         return `published ${formatDateTime(this.post.publishedAt)}`;
+      }
+      return '';
+    },
+    title() {
+      const { currentTab, post } = this;
+      if (currentTab.value === PUBLISHED) {
+        const { title } = post;
+        return title || 'Untitled';
+      }
+      if (currentTab.value === DRAFTS) {
+        const { draftTitle } = post;
+        return draftTitle || 'Untitled';
       }
       return '';
     },

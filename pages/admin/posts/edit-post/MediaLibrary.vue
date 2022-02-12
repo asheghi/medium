@@ -22,7 +22,7 @@
     >
       <div
         v-if="loading"
-        class="loading"
+        class="loading opacity-0 flex justify-center h-full items-center mb-8 animate-pulse min-h-[4rem]"
         v-text="'Fetching images ...'"
       />
       <div class="images">
@@ -80,12 +80,16 @@ export default {
     getImageUrl(image) {
       return `/api/media/${image.filename}`;
     },
+    getThumbnailUrl(image) {
+      return `/api/media/${image.filename}?width=100`;
+    },
   },
 };
 </script>
 <style lang="scss">
 .MediaLibrary{
   min-width: 400px;
+  @apply px-4;
   .top{
     @apply flex justify-between py-4;
     .active{

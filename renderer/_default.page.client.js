@@ -1,7 +1,9 @@
 // eslint-disable-next-line import/no-unresolved
 import { getPage } from 'vite-plugin-ssr/client';
 import { createApp } from './app';
+import { fixBackButtonReload } from '../lib/utils';
 
+fixBackButtonReload();
 async function hydrate() {
   // We do Server Routing, but we can also do Client Routing by using `useClientRouter()`
   // instead of `getPage()`, see https://vite-plugin-ssr.com/useClientRouter

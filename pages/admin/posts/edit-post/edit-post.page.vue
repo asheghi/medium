@@ -29,7 +29,7 @@
     </div>
     <div
       v-if="!(post && hasMounted)"
-      class="loading-editor px-4 opacity-75 animate-pulse"
+      class="loading-editor opacity-0 animate-pulse"
     >
       Loading Editor ...
     </div>
