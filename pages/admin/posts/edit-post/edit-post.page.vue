@@ -40,7 +40,7 @@
     <Modal
       ref="modal"
     >
-      <div class="flex flex-col gap-4">
+      <div class="flex p-4 flex-col gap-4">
         <div class="summary">
           <div class="text-sm opacity-50 mb-2">
             Write a summary for your post

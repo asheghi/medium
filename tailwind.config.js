@@ -23,7 +23,27 @@ module.exports = {
       },
     },
   },
-  plugins:[
+  plugins: [
+    // eslint-disable-next-line global-require
     require('@tailwindcss/typography'),
-  ]
+    ({ addComponents }) => {
+      addComponents({
+        '.container': {
+          maxWidth: '100%',
+          '@screen sm': {
+            maxWidth: '640px',
+          },
+          '@screen md': {
+            maxWidth: '768px',
+          },
+          '@screen lg': {
+            maxWidth: '768px',
+          },
+          '@screen xl': {
+            maxWidth: '760px',
+          },
+        },
+      });
+    },
+  ],
 };
