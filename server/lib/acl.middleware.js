@@ -1,11 +1,18 @@
-module.exports.accessControlMiddleware = (req, res, next) => {
+const { authMiddleware } = require('../api/auth/auth.middleware');
+
+module.exports.accessControlMiddleware = async (req, res, next) => {
   const { url } = req;
-  const authed = req.session.user;
-  if (authed && url.startsWith('/auth')) {
+  if (url.startsWith('/auth') || url.startsWith('/admin')) {
+    await new Promise((r) => {
+      authMiddleware(req, res, r);
+    });
+  }
+
+  if (req.user && url.startsWith('/auth')) {
     return res.redirect('/admin');
   }
 
-  if (!authed && url.startsWith('/admin')) {
+  if (!req.user && url.startsWith('/admin')) {
     return res.redirect('/auth/login');
   }
 

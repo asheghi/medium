@@ -3,7 +3,7 @@ const multer = require('multer');
 const { PrismaClient } = require('@prisma/client');
 const path = require('path');
 const sharp = require('sharp');
-const { authMiddleware } = require('../auth/auth.middleware');
+const { authGuard } = require('../auth/auth.middleware');
 const { mediaDir } = require('../../server-conf');
 const { MediaService } = require('./media.service');
 
@@ -26,7 +26,7 @@ app.get('/:filename', async (req, res) => {
   sharp(imagePath).resize({ width, height }).pipe(res);
 });
 
-app.use(authMiddleware);
+app.use(authGuard);
 
 app.post('/upload', upload.any(), async (req, res) => {
   if (!req.files.length) return res.status(400).json({ msg: 'no files uploaded' });

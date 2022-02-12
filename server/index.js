@@ -1,7 +1,6 @@
 const express = require('express');
 const { createPageRenderer } = require('vite-plugin-ssr');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const cookieParser = require('cookie-parser');
 const { ApiRouter } = require('./api/api.index');
 const { seedDatabase } = require('./lib/seeder');
 const { accessControlMiddleware } = require('./lib/acl.middleware');
@@ -14,18 +13,6 @@ async function startServer() {
 
   const app = express();
   app.enable('trust proxy');
-  app.use(session({
-    store: new FileStore({}),
-    secret: process.env.SESSION_SECRET || 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    proxy: true,
-    key: 'session.sid',
-    cookie: {
-      secure: isProduction,
-    },
-  }));
-
   app.use(ApiRouter);
 
   let viteDevServer;
@@ -41,6 +28,7 @@ async function startServer() {
     app.use(viteDevServer.middlewares);
   }
 
+  app.use(cookieParser());
   app.use(accessControlMiddleware);
   const renderPage = createPageRenderer({ viteDevServer, isProduction, root });
   app.get('*', async (req, res, next) => {

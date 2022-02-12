@@ -4,7 +4,6 @@ const { comparePassword, hashPassword } = require('../../lib/utils');
 
 const prisma = new PrismaClient();
 module.exports.AuthService = {};
-
 module.exports.AuthService.login = async (email, password) => {
   const user = await prisma.user.findUnique({
     where: { email },

@@ -2,17 +2,17 @@ const Express = require('express');
 const bodyParser = require('body-parser');
 const { PostService } = require('./posts.service');
 const { randomString } = require('../../lib/utils');
-const { authMiddleware } = require('../auth/auth.middleware');
+const { authGuard } = require('../auth/auth.middleware');
 
 const app = Express.Router();
 
 app.use(bodyParser.json());
 
-app.use(authMiddleware);
+app.use(authGuard);
 
 app.post('/', async (req, res) => {
   const post = req.body;
-  post.authorId = req.session.user.id;
+  post.authorId = req.user.id;
   const result = await PostService.create(post);
   if (req.query.redirect) {
     return res.redirect(`/admin/post/${result.id}/edit`);
@@ -29,7 +29,7 @@ app.get('/create', async (req, res) => {
   const post = {
     draftTitle: 'Untitled',
     draftContent: 'Put down what you want to say ...',
-    authorId: req.session.user.id,
+    authorId: req.user.id,
     slug: randomString(14),
   };
   const result = await PostService.create(post);
