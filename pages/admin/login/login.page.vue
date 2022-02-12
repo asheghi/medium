@@ -83,6 +83,7 @@ export default {
       }
     },
   },
+  cacheControl: 'public, max-age=86400',
 };
 </script>
 

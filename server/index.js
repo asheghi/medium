@@ -14,7 +14,10 @@ async function startServer() {
 
   let viteDevServer;
   if (isProduction) {
-    app.use(express.static(`${root}/dist/client`));
+    app.use(express.static(`${root}/dist/client`, {
+      // cache static assets for 24 hours
+      cacheControl: 'public, max-age=86400',
+    }));
   } else {
     // eslint-disable-next-line global-require
     const vite = require('vite');
@@ -34,10 +37,11 @@ async function startServer() {
       url,
     };
     const pageContext = await renderPage(pageContextInit);
-    const { httpResponse, redirect } = pageContext;
+    const { httpResponse, redirect, cacheControl } = pageContext;
     if (redirect) return res.redirect(redirect);
     if (!httpResponse) return next();
     const { body, statusCode, contentType } = httpResponse;
+    if (cacheControl) res.set('Cache-Control', cacheControl);
     return res.status(statusCode).type(contentType).send(body);
   });
 

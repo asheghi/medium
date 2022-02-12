@@ -86,6 +86,7 @@ export default {
     }
     return `${defaultSiteTitle} - Home Page`;
   },
+  cacheControl: 'public, max-age=43200',
 };
 </script>
 <style lang="scss">

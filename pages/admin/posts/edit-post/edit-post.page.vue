@@ -97,6 +97,7 @@ export default {
   pageTitle({ post }) {
     return `Edit Post - ${post.title || defaultSiteTitle}`;
   },
+  cacheControl: 'no-store',
   name: 'EditPost',
   components: { PostEditor, LogoIcon, Modal },
   setup() {

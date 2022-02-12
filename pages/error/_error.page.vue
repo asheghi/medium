@@ -22,5 +22,6 @@ export default {
     if (is404) return 'Page not Found!';
     return 'Something went wrong!';
   },
+  cacheControl: 'public, max-age=3600',
 };
 </script>

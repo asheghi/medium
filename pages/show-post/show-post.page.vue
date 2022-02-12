@@ -45,6 +45,7 @@ export default {
     const { post } = pageContext;
     return { post };
   },
+  cacheControl: 'public, max-age=43200',
 };
 </script>
 

@@ -45,6 +45,7 @@ import { defaultSiteTitle } from '../../../../lib/config';
 
 export default {
   pageTitle: `Dashboard - ${defaultSiteTitle}`,
+  cacheControl: 'no-store',
   name: 'ListPosts',
   components: { PostsList },
   setup() {

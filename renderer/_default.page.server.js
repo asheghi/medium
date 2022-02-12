@@ -27,13 +27,20 @@ function getPageDesc(pageContext) {
   return def;
 }
 
+function getCacheControl(pageContext) {
+  const { Page } = pageContext;
+  const { cacheControl } = Page;
+  if (typeof cacheControl === 'function') return cacheControl(pageContext);
+  return cacheControl;
+}
+
 async function render(pageContext) {
   const app = createApp(pageContext);
   const appHtml = await renderToString(app);
 
   const title = getPageTitle(pageContext);
   const desc = getPageDesc(pageContext);
-
+  const cacheControl = getCacheControl(pageContext);
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -51,6 +58,7 @@ async function render(pageContext) {
   return {
     documentHtml,
     pageContext: {
+      cacheControl,
       // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
     },
   };

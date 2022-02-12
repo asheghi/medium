@@ -21,6 +21,7 @@ app.get('/:filename', async (req, res) => {
 
   const width = qWidth ? +qWidth : null;
   const height = qHeight ? +qHeight : null;
+  res.set('Cache-Control', 'public, max-age=0');
   res.type(`image/${image.format}`);
   const imagePath = path.join(mediaDir, filename);
   sharp(imagePath).resize({ width, height }).pipe(res);
