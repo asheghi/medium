@@ -46,9 +46,11 @@ async function startServer() {
   });
 
   const port = process.env.PORT || 3000;
-  app.listen(port);
-  // eslint-disable-next-line no-console
-  console.log(`Server running at http://localhost:${port}`);
+  const hostname = process.env.HOST || '127.0.0.1';
+  app.listen(port, hostname, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server running at http://${hostname}:${port}`);
+  });
 }
 
 startServer();
