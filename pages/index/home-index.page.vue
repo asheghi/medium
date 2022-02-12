@@ -113,7 +113,7 @@ export default {
   .no-post{
     @apply px-4 py-2 flex flex-col items-center gap-2 my-auto;
     .icon{
-      @apply animate-pulse;
+      @apply opacity-0 animate-pulse;
       svg{
         fill: theme('colors.gray.400');
       }
