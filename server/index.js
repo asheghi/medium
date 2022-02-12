@@ -2,15 +2,12 @@ const express = require('express');
 const { createPageRenderer } = require('vite-plugin-ssr');
 const cookieParser = require('cookie-parser');
 const { ApiRouter } = require('./api/api.index');
-const { seedDatabase } = require('./lib/seeder');
 const { accessControlMiddleware } = require('./lib/acl.middleware');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const root = `${__dirname}/..`;
 
 async function startServer() {
-  await seedDatabase();
-
   const app = express();
   app.enable('trust proxy');
   app.use(ApiRouter);

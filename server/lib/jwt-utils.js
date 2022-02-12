@@ -38,7 +38,7 @@ module.exports.JwtUtils = {
       jwt.verify(token, jwtSecret);
       valid = true;
     } catch (e) {
-      console.error(e.message);
+      console.error(e);
       valid = false;
       // nothing
     }
