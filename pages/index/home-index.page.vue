@@ -1,5 +1,5 @@
 <template>
-  <div class="HomePage min-h-screen flex justify-center items-center">
+  <div class="HomePage min-h-screen">
     <BlogHeader />
     <div
       v-if="posts && posts.length"
@@ -82,10 +82,9 @@ export default {
 </script>
 <style lang="scss">
 .HomePage{
-  @apply flex flex-col gap-8 px-8 min-h-screen w-full;
   .content{
-    @apply container flex flex-col gap-4 mb-auto w-full;
-    max-width: 500px;
+    @apply container mx-auto pt-8;
+    min-height: calc(100vh - (68px + 64px))
   }
   .pagination{
     @apply container flex flex-col sm:flex-row justify-center items-center gap-4;
