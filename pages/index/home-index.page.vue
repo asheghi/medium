@@ -82,7 +82,7 @@ export default {
 </script>
 <style lang="scss">
 .HomePage{
-  @apply flex flex-col gap-8 py-4 px-8 min-h-screen w-full;
+  @apply flex flex-col gap-8 px-8 min-h-screen w-full;
   .content{
     @apply container flex flex-col gap-4 mb-auto w-full;
     max-width: 500px;

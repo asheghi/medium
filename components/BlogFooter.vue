@@ -1,17 +1,12 @@
 <template>
-  <div
-    class="footer"
+  <footer
+    class="py-4 text-gray-400"
   >
-    powered by <span class="text-red-600">♥</span>
-  </div>
+    powered by <span class="text-red-600 opacity-75 text-2xl">♥</span>
+  </footer>
 </template>
 <script>
 export default {
   name: 'BlogFooter',
 };
 </script>
-<style lang="scss">
-.footer{
-  @apply opacity-70 py-4 text-center;
-}
-</style>
