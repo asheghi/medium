@@ -1,10 +1,10 @@
-const { authMiddleware } = require('../api/auth/auth.middleware');
+const { authenticateRequest } = require('../api/auth/auth.middleware');
 
 module.exports.accessControlMiddleware = async (req, res, next) => {
   const { url } = req;
   if (url.startsWith('/auth') || url.startsWith('/admin')) {
     await new Promise((r) => {
-      authMiddleware(req, res, r);
+      authenticateRequest(req, res, r);
     });
   }
 

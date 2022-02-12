@@ -11,7 +11,7 @@ const authenticateRequest = (req, res, next) => {
   }
   return next();
 };
-module.exports.authMiddleware = authenticateRequest;
+module.exports.authenticateRequest = authenticateRequest;
 
 module.exports.authGuard = async (req, res, next) => {
   await new Promise((r) => {
