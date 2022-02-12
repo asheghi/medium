@@ -114,7 +114,7 @@ This is an example of how to list things you need to use the software and how to
 
 2. Configure Envronment Variables 
    ```sh
-   cp .env.exaple .env
+   cp .env.example .env
    ```
 3. Install NPM packages
    ```sh
@@ -143,7 +143,7 @@ This is an example of how to list things you need to use the software and how to
    ```
 2. Configure Envronment Variables 
    ```sh
-   cp .env.exaple .env
+   cp .env.example .env
    ```
 3. Install NPM packages
    ```sh
