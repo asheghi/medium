@@ -73,7 +73,7 @@ export default {
 </script>
 <style lang="scss">
 .BlogHeader {
-  @apply flex w-full justify-between items-center py-4;
+  @apply flex w-full justify-between items-center py-4 mx-auto container;
   .brand{
     @apply flex items-center gap-2 text-2xl;
     .name{
