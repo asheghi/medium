@@ -83,7 +83,7 @@ export default {
 <style lang="scss">
 .HomePage{
   .content{
-    @apply container mx-auto pt-8;
+    @apply container mx-auto pt-8 px-4 lg:px-0;
     min-height: calc(100vh - (68px + 64px))
   }
   .pagination{
