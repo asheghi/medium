@@ -13,12 +13,17 @@ async function startServer() {
   await seedDatabase();
 
   const app = express();
-
+  app.enable('trust proxy');
   app.use(session({
     store: new FileStore({}),
-    secret: 'keyboard cat',
+    secret: process.env.SESSION_SECRET || 'keyboard cat',
     resave: false,
     saveUninitialized: true,
+    proxy: true,
+    key: 'session.sid',
+    cookie: {
+      secure: isProduction,
+    },
   }));
 
   app.use(ApiRouter);
