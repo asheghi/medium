@@ -29,8 +29,7 @@ module.exports.JwtUtils = {
     if (valid) {
       req.user = payload;
     }
-    req.user = this.decodeToken(token);
-    return true;
+    return valid;
   },
   verifyToken(token) {
     if (!token) return false;

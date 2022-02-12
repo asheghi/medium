@@ -10,6 +10,7 @@ const root = `${__dirname}/..`;
 async function startServer() {
   const app = express();
   app.enable('trust proxy');
+  app.use(cookieParser());
   app.use(ApiRouter);
 
   let viteDevServer;
@@ -28,7 +29,6 @@ async function startServer() {
     app.use(viteDevServer.middlewares);
   }
 
-  app.use(cookieParser());
   app.use(accessControlMiddleware);
   const renderPage = createPageRenderer({ viteDevServer, isProduction, root });
   app.get('*', async (req, res, next) => {

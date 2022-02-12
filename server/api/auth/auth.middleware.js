@@ -14,9 +14,6 @@ const authenticateRequest = (req, res, next) => {
 module.exports.authenticateRequest = authenticateRequest;
 
 module.exports.authGuard = async (req, res, next) => {
-  await new Promise((r) => {
-    authenticateRequest(req, res, r);
-  });
   if (!req.user) return res.status(401).send();
   return next();
 };
