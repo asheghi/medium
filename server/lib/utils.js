@@ -1,3 +1,4 @@
+const debug = require('debug');
 const bcrypt = require('bcryptjs');
 
 module.exports.hashPassword = (password) => {
@@ -16,4 +17,12 @@ module.exports.randomString = (length) => {
       * charactersLength));
   }
   return result;
+};
+
+module.exports.getServerDebug = (name, type) => {
+  let namespace = `app:${name}`;
+  if (type) {
+    namespace += `:${type}`;
+  }
+  return debug(namespace);
 };

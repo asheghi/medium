@@ -1,7 +1,7 @@
 const { JwtUtils } = require('../../lib/jwt-utils');
-const { getDebug } = require('../../../lib/utils');
+const { getServerDebug } = require('../../lib/utils');
 
-const debug = getDebug('auth:middleware');
+const debug = getServerDebug('auth:middleware');
 // try to fill req.user based on jwt token inside cookie header
 const authenticateRequest = (req, res, next) => {
   try {

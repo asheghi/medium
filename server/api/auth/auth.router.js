@@ -4,9 +4,8 @@ const { authGuard } = require('./auth.middleware');
 const { AuthService } = require('./auth.service');
 const { JwtUtils } = require('../../lib/jwt-utils');
 const { jwtCookieField } = require('../../server-conf');
-const { getDebug } = require('../../../lib/utils');
-
-const debug = getDebug('auth:router');
+const { getServerDebug } = require('../../lib/utils');
+const debug = getServerDebug('auth:router');
 const cookieMaxAge = 12 * 60 * 60 * 1000;
 
 const app = Express.Router();

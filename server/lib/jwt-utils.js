@@ -1,12 +1,10 @@
 const jwt = require('jsonwebtoken');
 const hash = require('object-hash');
-const { jwtCookieField } = require('../server-conf');
-
-const secret = process.env.JWT_SECRET || 'keyboard cat';
+const { jwtCookieField, jwtSecret } = require('../server-conf');
 
 module.exports.JwtUtils = {
   generateTokenForPayload(payload) {
-    return jwt.sign(payload, secret);
+    return jwt.sign(payload, jwtSecret);
   },
   generateTokenForRequest(req, extraPayload) {
     const { ip } = req;
@@ -14,9 +12,6 @@ module.exports.JwtUtils = {
     const sessionHash = hash({ ip, userAgent });
     const payload = { ...extraPayload, __h: sessionHash };
     return this.generateTokenForPayload(payload);
-  },
-  setToken(res, token) {
-    return res.cookie(jwtCookieField, token);
   },
   verifyRequest(req) {
     if (!req.cookies) return false;
@@ -40,7 +35,7 @@ module.exports.JwtUtils = {
   verifyToken(token) {
     let valid = false;
     try {
-      jwt.verify(token, secret);
+      jwt.verify(token, jwtSecret);
       valid = true;
     } catch (e) {
       console.error(e.message);

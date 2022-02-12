@@ -1,5 +1,5 @@
 const path = require('path');
-const {randomString} = require("./lib/utils");
+const { randomString } = require('./lib/utils');
 
 const dataDir = process.env.DATA_DIR || path.join(__dirname, '../data');
 const mediaDir = path.join(dataDir, 'media');
