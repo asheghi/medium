@@ -15,7 +15,7 @@ app.post('/setup', bodyParser.json(), async (req, res) => {
   const { body: { email, password } } = req;
   const user = await AuthService.setupAdminUser(email, password);
   if (!user) return res.status(400).send('something is not right!');
-  const token = JwtUtils.generateToken(req, user);
+  const token = JwtUtils.generateTokenForRequest(req, user);
   res.cookie(jwtCookieField, token, { maxAge: cookieMaxAge });
   return res.json({ success: !!user });
 });

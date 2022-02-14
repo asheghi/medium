@@ -4,12 +4,13 @@
       <h2 class="head">
         Posts
       </h2>
-      <a
-        :href="'/api/posts/create'"
+      <div
+        :class="{loading:loadingCreate}"
         class="btn"
+        @click="createPost"
       >
-        New Post
-      </a>
+        {{ loadingCreate ? 'Processing...' : 'New Post' }}
+      </div>
     </div>
     <div class="tabs">
       <div
@@ -42,6 +43,10 @@ import { usePageContext } from '../../../../renderer/usePageContext';
 import PostsList from './posts-list.vue';
 import { DRAFTS, PUBLISHED } from './utils';
 import { defaultSiteTitle } from '../../../../lib/config';
+import { ax } from '../../../../lib/plugins/axios';
+import { getDebug, parseAxiosError } from '../../../../lib/utils';
+
+const debug = getDebug('manage-posts:page');
 
 export default {
   pageTitle: `Dashboard - ${defaultSiteTitle}`,
@@ -55,8 +60,24 @@ export default {
     const currentTab = ref(DRAFTS);
     provide('currentTab', currentTab);
 
+    const loadingCreate = ref(false);
+    const createPost = async () => {
+      loadingCreate.value = true;
+      try {
+        const { status, data } = await ax.post('posts/anotherOne');
+        if (status === 200 && data && data.id) {
+          window.location.href = `/admin/post/${data.id}/edit`;
+          await new Promise((r) => { setTimeout(r); }, 1500);
+        }
+      } catch (e) {
+        debug(parseAxiosError(e));
+      } finally {
+        loadingCreate.value = false;
+      }
+    };
+
     return {
-      posts, currentTab, DRAFTS, PUBLISHED,
+      posts, currentTab, DRAFTS, PUBLISHED, loadingCreate, createPost,
     };
   },
   computed: {
@@ -96,7 +117,10 @@ export default {
     .btn {
       @apply rounded px-2 py-1  capitalize text-primary border-primary
       hover:shadow-lg active:shadow-sm hover:bg-primary active:scale-95
-      hover:text-white hover:scale-110 transform  transition;
+      hover:text-white hover:scale-110 transform  transition cursor-pointer;
+      &.loading{
+        @apply cursor-progress opacity-75 animate-pulse;
+      }
     }
   }
 

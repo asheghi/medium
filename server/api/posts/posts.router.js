@@ -25,15 +25,15 @@ app.get('/', async (req, res) => {
   res.json(posts);
 });
 
-app.get('/create', async (req, res) => {
+app.post('/anotherOne', async (req, res) => {
   const post = {
     draftTitle: 'Untitled',
     draftContent: 'Put down what you want to say ...',
     authorId: req.user.id,
     slug: randomString(14),
   };
-  const result = await PostService.create(post);
-  return res.redirect(`/admin/post/${result.id}/edit`);
+  const { id } = await PostService.create(post);
+  res.status(200).json({ id });
 });
 
 app.post('/save/:id', async (req, res) => {
