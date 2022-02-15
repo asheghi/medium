@@ -5,7 +5,7 @@
     "build": "dotenv vite build && vite build --ssr && npm run prisma:gen",
     "server": "dotenv node ./server",
     "server:prod": "dotenv -v NODE_ENV=production node ./server",
-    "start": "npm run prisma:deploy && npm run server:prod",
+    "start": "npm run server:prod",
     "lint": "eslint . --ext .js,.vue",
     "lint-fix": "eslint . --ext .js,.vue --fix",
     "prisma:gen": "npx prisma generate --schema ./server/prisma/schema.prisma/",
