@@ -1,40 +1,44 @@
 const Express = require('express');
 const multer = require('multer');
-const { PrismaClient } = require('@prisma/client');
-const path = require('path');
 const sharp = require('sharp');
 const { authGuard } = require('../auth/auth.middleware');
 const { mediaDir } = require('../../server-conf');
-const { MediaService } = require('./media.service');
-
-const prisma = new PrismaClient();
+const { ObjectStorage } = require('../../lib/object-storage');
 
 const upload = multer({ dest: mediaDir });
 const app = Express.Router();
 
 app.get('/:filename', async (req, res) => {
   const { filename } = req.params;
-  const image = await prisma.image.findUnique({ where: { filename } });
-  if (!image) return res.status(404).send();
-
   const { width: qWidth, height: qHeight } = req.query;
+  const buffer = await ObjectStorage.getObject(filename);
+  const metadata = await sharp(buffer).metadata();
+  const {
+    format,
+  } = metadata;
 
   const width = qWidth ? +qWidth : null;
   const height = qHeight ? +qHeight : null;
   res.set('Cache-Control', 'public, max-age=0');
-  res.type(`image/${image.format}`);
-  const imagePath = path.join(mediaDir, filename);
-  sharp(imagePath).resize({ width, height }).pipe(res);
+  res.type(`image/${format}`);
+  if (width || height) {
+    return sharp(buffer).resize({ width, height }).pipe(res);
+  }
+  return res.end(buffer, 'binary');
 });
 
 app.use(authGuard);
 
 app.post('/upload', upload.any(), async (req, res) => {
   if (!req.files.length) return res.status(400).json({ msg: 'no files uploaded' });
+  const promises = req.files.map(async (file) => {
+    const { path, originalname } = file;
+    await ObjectStorage.uploadFile(path, originalname);
+    return originalname;
+  });
 
-  const promises = req.files.map(MediaService.handleUploadedFile);
   const images = await Promise.all(promises);
-  res.json(images);
+  return res.json(images);
 });
 
 app.post('/fromUrl', async (req, res) => {
@@ -43,8 +47,8 @@ app.post('/fromUrl', async (req, res) => {
 });
 
 app.get('/', async (req, res) => {
-  const images = await prisma.image.findMany();
-  res.json(images);
+  const list = await ObjectStorage.listObjects();
+  res.json(list.map((it) => it.name));
 });
 
 module.exports.MediaRouter = app;

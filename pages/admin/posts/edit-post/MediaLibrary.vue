@@ -27,12 +27,12 @@
       />
       <div class="images">
         <div
-          v-for="image in media"
+          v-for="image in files"
           :key="image.id"
           class="image"
         >
           <img
-            :src="getImageUrl(image)"
+            :src="getThumbnailUrl(image)"
             :alt="image.alt"
             @click="onSelect(image)"
           >
@@ -55,7 +55,7 @@ export default {
   emits: ['select'],
   data() {
     return {
-      media: [],
+      files: [],
       currentTab: 'library',
       loading: false,
     };
@@ -67,9 +67,10 @@ export default {
     async fetchMedia() {
       try {
         this.loading = true;
-        const { data, status } = await ax.get('media');
-        this.media = data;
+        const { data } = await ax.get('media');
+        this.files = data;
       } catch (e) {
+        console.error(e);
       } finally {
         this.loading = false;
       }
@@ -78,10 +79,10 @@ export default {
       this.$emit('select', this.getImageUrl(image));
     },
     getImageUrl(image) {
-      return `/api/media/${image.filename}`;
+      return `/api/media/${image}`;
     },
     getThumbnailUrl(image) {
-      return `/api/media/${image.filename}?width=100`;
+      return `/api/media/${image}?width=100`;
     },
   },
 };
