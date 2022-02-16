@@ -222,6 +222,26 @@
             icon="quotes"
           />
         </button>
+        <button
+          v-if="!editor.getAttributes('link').href"
+          @click="onSetLinkClicked"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="link"
+          />
+        </button>
+        <button
+          v-if="editor.getAttributes('link').href"
+          @click="unsetLink"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="unlink"
+          />
+        </button>
       </div>
       <div class="group text-align">
         <button
@@ -290,6 +310,22 @@
     >
       <InsertMedia @select="addImage" />
     </TModal>
+    <TModal
+      ref="linkModal"
+    >
+      <div class="LinkModal">
+        <input
+          v-model="link_href"
+          placeholder="https://..."
+          type="text"
+        >
+        <button
+          @click="setLink"
+        >
+          Set
+        </button>
+      </div>
+    </TModal>
   </div>
 </template>
 
@@ -301,6 +337,7 @@ import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading';
 import Text from '@tiptap/extension-text';
+import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import InsertMedia from './InsertMedia.vue';
 import TModal from '../../../../components/modal.vue';
@@ -327,11 +364,10 @@ export default {
       editor: null,
       showIcon: false,
       focused: false,
+      link_href: null,
     };
   },
-  computed: {
-
-  },
+  computed: {},
   async mounted() {
     this.editor = new Editor({
       content: this.modelValue,
@@ -349,6 +385,9 @@ export default {
         Heading,
         TextAlign.configure({
           types: ['heading', 'paragraph'],
+        }),
+        Link.configure({
+          openOnClick: false,
         }),
       ],
       onUpdate: ({ editor }) => {
@@ -420,6 +459,18 @@ export default {
     showMediaModal() {
       this.$refs.modal.show();
     },
+    setLink() {
+      if (!this.link_href) return;
+      this.$refs.linkModal.hide();
+      this.editor.commands.setLink({ href: this.link_href, target: '_blank' });
+    },
+    unsetLink() {
+      this.editor.commands.unsetLink();
+    },
+    onSetLinkClicked() {
+      this.link_href = this.editor.getAttributes('link').href;
+      this.$refs.linkModal.show();
+    },
   },
 };
 </script>
@@ -427,30 +478,32 @@ export default {
 <style lang="scss">
 .PostEditor {
   @apply flex flex-col gap-4 container mx-auto;
-  .top-menu{
+  .top-menu {
     width: 0;
     height: 0;
     overflow: hidden;
     @apply flex flex-wrap gap-2;
-    button{
+    button {
       @apply border rounded px-2 py-1;
-      &.is-active{
+      &.is-active {
         @apply text-primary bg-gray-200;
       }
     }
   }
-  .icon-plus{
+
+  .icon-plus {
     @apply absolute transition transform cursor-pointer text-2xl font-bold shadow
     bg-gradient-to-t from-primary to-primary-300 flex justify-center
     items-center text-white bg-primary rounded-full w-8 h-8 opacity-50;
-    &:hover{
+    &:hover {
       @apply shadow opacity-100 scale-110;
     }
 
-    .icon-plus-content{
+    .icon-plus-content {
       @apply absolute left-8;
     }
-  };
+  }
+;
 }
 
 /* Basic editor styles */
@@ -466,13 +519,16 @@ export default {
 .bubble-menu {
   @apply flex bg-white px-1 py-1 shadow-lg transition-all transition border border-gray-400 rounded gap-3;
   min-width: 400px;
-  & > div{
+
+  & > div {
     @apply flex gap-1;
   }
-  .small{
+
+  .small {
     @apply transform scale-[.85];
     transform-origin: bottom;
   }
+
   button {
     @apply flex justify-center items-center rounded text-primary;
     width: 24px;
@@ -491,8 +547,18 @@ export default {
     }
   }
 }
-hr{
+
+hr {
   width: 340px;
   margin: 0 auto;
+}
+.LinkModal{
+  @apply px-4 py-4 flex items-center gap-2;
+  input{
+    @apply outline-primary border-gray-200 rounded border px-2 py-1 h-8;
+  }
+  button{
+    @apply bg-primary text-white px-4 py-1 max-h-8 rounded;
+  }
 }
 </style>
