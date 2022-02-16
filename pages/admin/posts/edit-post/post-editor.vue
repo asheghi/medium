@@ -242,6 +242,16 @@
             icon="unlink"
           />
         </button>
+        <button
+          v-if="currentImage"
+          @click="onEditImageClicked"
+        >
+          <Icon
+            width="24"
+            height="24"
+            icon="image"
+          />
+        </button>
       </div>
       <div class="group text-align">
         <button
@@ -326,6 +336,78 @@
         </button>
       </div>
     </TModal>
+    <TModal
+      ref="imageEditModal"
+    >
+      <div
+        class="editImageModal flex flex-col gap-4 p-4"
+        @keydown.enter="onChangeImage"
+      >
+        <div class="preview">
+          <img
+            v-if="currentImage && currentImage.src"
+            :src="previewImageLink(currentImage.src)"
+            alt=""
+          >
+        </div>
+        <div class="flex gap-2">
+          <div class="flex gap-2 items-center w-full">
+            <label>Image</label>
+            <input
+              disabled
+              :value="previewImageLink(currentImage.src)"
+              class="w-full text-gray-500"
+              type="text"
+              placeholder="Image URL"
+              @change="currentImage.src = $event.target.value"
+            >
+          </div>
+          <button @click="onChangeImage">
+            Apply
+          </button>
+        </div>
+        <div class="flex items-center gap-4 ">
+          <div class="flex items-center gap-2 w-1/2">
+            <label>Alt</label>
+            <input
+              v-model="currentImage.alt"
+              type="text"
+              class="w-full"
+              placeholder="Enter Alt"
+            >
+          </div>
+          <div class="flex items-center gap-2 w-1/2">
+            <label>Title</label>
+            <input
+              v-model="currentImage.title"
+              type="text"
+              class="w-full"
+              placeholder="Enter Title"
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4 ">
+          <div class="flex items-center gap-2 w-1/2">
+            <label>Width</label>
+            <input
+              v-model="editImage.width"
+              type="number"
+              class="w-full"
+              placeholder="auto"
+            >
+          </div>
+          <div class="flex items-center gap-2 w-1/2">
+            <label>Height</label>
+            <input
+              v-model="editImage.height"
+              type="number"
+              class="w-full"
+              placeholder="auto"
+            >
+          </div>
+        </div>
+      </div>
+    </TModal>
   </div>
 </template>
 
@@ -365,9 +447,14 @@ export default {
       showIcon: false,
       focused: false,
       link_href: null,
+      currentImage: {
+        // src , alt,title
+      },
+      editImage: {
+
+      },
     };
   },
-  computed: {},
   async mounted() {
     this.editor = new Editor({
       content: this.modelValue,
@@ -404,6 +491,7 @@ export default {
       this.focused = false;
     });
     this.editor.on('transaction', () => {
+      this.checkImageFocused();
       this.updateIconPosition();
       this.updateShowIconState();
     });
@@ -412,11 +500,19 @@ export default {
     if (this.editor) this.editor.destroy();
   },
   methods: {
-    addImage(url) {
+    addImage(url, title = '', alt = '') {
       this.$refs.modal.hide();
       if (url) {
-        this.editor.chain().focus().setImage({ src: url }).run();
+        this.editor.chain().focus().setImage({ src: url, title, alt }).run();
       }
+    },
+    previewImageLink(src) {
+      if (!src) return null;
+      const queryStart = src.indexOf('?');
+      if (queryStart > 1) {
+        return src.substring(0, queryStart);
+      }
+      return src;
     },
     updateIconPosition() {
       const topMenuPos = document.querySelector('.top-menu').getBoundingClientRect();
@@ -470,6 +566,34 @@ export default {
     onSetLinkClicked() {
       this.link_href = this.editor.getAttributes('link').href;
       this.$refs.linkModal.show();
+    },
+    checkImageFocused() {
+      const obj = this.editor.getAttributes('image');
+      if (obj.src) {
+        this.currentImage = obj;
+      } else {
+        this.currentImage = null;
+      }
+    },
+    onEditImageClicked() {
+      this.$refs.imageEditModal.show();
+      try {
+        const query = JSON.parse(`{"${this.currentImage.src.replace(/&/g, '","')
+          .replace(/=/g, '":"')}"}`, (key, value) => (key === '' ? value : decodeURIComponent(value)));
+        if (query.width) {
+          this.editImage.width = query.width;
+        }
+        if (query.height) {
+          this.editImage.height = query.height;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    onChangeImage() {
+      this.$refs.imageEditModal.hide();
+      const url = `${this.previewImageLink(this.currentImage.src)}?width=${this.editImage.width}&height=${this.editImage.height}`;
+      this.editor.chain().focus().setImage({ ...this.currentImage, src: url }).run();
     },
   },
 };
@@ -552,13 +676,37 @@ hr {
   width: 340px;
   margin: 0 auto;
 }
+
 .LinkModal{
   @apply px-4 py-4 flex items-center gap-2;
-  input{
+}
+.LinkModal,.editImageModal {
+  input {
     @apply outline-primary border-gray-200 rounded border px-2 py-1 h-8;
   }
-  button{
+
+  button {
     @apply bg-primary text-white px-4 py-1 max-h-8 rounded;
   }
+  label{
+    @apply text-gray-500;
+    min-width: 50px;
+  }
+}
+.editImageModal{
+
+  img{
+    max-height: 400px;
+    width: auto;
+    margin: 0 auto;
+  }
+
+}
+img{
+  margin: 0 auto;
+  @apply rounded;
+}
+#tippy-1{
+  z-index: 99!important;
 }
 </style>

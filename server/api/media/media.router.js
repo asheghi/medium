@@ -9,22 +9,26 @@ const upload = multer({ dest: mediaDir });
 const app = Express.Router();
 
 app.get('/:filename', async (req, res) => {
-  const { filename } = req.params;
-  const { width: qWidth, height: qHeight } = req.query;
-  const buffer = await ObjectStorage.getObject(filename);
-  const metadata = await sharp(buffer).metadata();
-  const {
-    format,
-  } = metadata;
+  try {
+    const { filename } = req.params;
+    const { width: qWidth, height: qHeight } = req.query;
+    const buffer = await ObjectStorage.getObject(filename);
+    const metadata = await sharp(buffer).metadata();
+    const {
+      format,
+    } = metadata;
 
-  const width = qWidth ? +qWidth : null;
-  const height = qHeight ? +qHeight : null;
-  res.set('Cache-Control', 'public, max-age=0');
-  res.type(`image/${format}`);
-  if (width || height) {
-    return sharp(buffer).resize({ width, height }).pipe(res);
+    const width = qWidth ? (+qWidth || null) : null;
+    const height = qHeight ? (+qHeight || null) : null;
+    res.set('Cache-Control', 'public, max-age=0');
+    res.type(`image/${format}`);
+    if (width || height) {
+      return sharp(buffer).resize({ width, height }).pipe(res);
+    }
+    return res.end(buffer, 'binary');
+  } catch (e) {
+    res.status(500).send('error');
   }
-  return res.end(buffer, 'binary');
 });
 
 app.use(authGuard);

@@ -1,9 +1,19 @@
 <template>
   <div class="">
     <BlogHeader />
-    <div class="ShowPost">
+    <div
+      v-if="preview"
+      class="preview"
+    >
+      <div class="text">
+        Preview Mode
+      </div>
+    </div>
+    <div
+      v-if="post"
+      class="ShowPost"
+    >
       <div
-        v-if="post"
         class="content prose"
       >
         <h2
@@ -33,17 +43,18 @@ import { defaultSiteTitle } from '../../lib/config';
 
 export default {
   pageTitle({ post }) {
-    return `${post.title} - ${defaultSiteTitle}`;
+    if (!post) return defaultSiteTitle;
+    return `${post?.title} - ${defaultSiteTitle}`;
   },
   pageDesc({ post }) {
-    return post.summary;
+    return post?.summary;
   },
   name: 'ShowPost',
   components: { BlogFooter, BlogHeader },
   setup() {
     const pageContext = usePageContext();
-    const { post } = pageContext;
-    return { post };
+    const { post, preview } = pageContext;
+    return { post, preview };
   },
   cacheControl: 'public, max-age=43200',
 };
@@ -55,9 +66,22 @@ export default {
   .content{
     @apply mt-12;
   }
+
+  hr{
+    width: 340px;
+    margin: 0 auto;
+  }
+  img{
+    margin: 0 auto;
+    @apply rounded;
+  }
 }
-hr{
-  width: 340px;
-  margin: 0 auto;
+
+.preview{
+  @apply fixed bottom-8 left-0 right-0 text-center;
+  .text{
+    @apply text-primary bg-white border border-primary rounded-full inline-block
+    px-2 py-1;
+  }
 }
 </style>

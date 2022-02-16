@@ -1,7 +1,7 @@
 <template>
   <div class="EditPost">
-    <div class="top flex justify-between py-8 items-center">
-      <div class="flex gap-4 items-center text-lg capitalize h-8">
+    <div class="top flex gap-4 py-8 items-center">
+      <div class="flex mr-auto gap-4 items-center text-lg capitalize h-8">
         <LogoIcon
           width="32"
           height="32"
@@ -14,6 +14,11 @@
           Saving changes ...
         </div>
       </div>
+      <a
+        class="text-xs opacity-75"
+        :href="'/post/' + post.slug+'?preview=true'"
+        target="_blank"
+      >Preview</a>
       <button
         class="btn"
         @click="$refs.modal.show()"
@@ -89,7 +94,7 @@ import { usePageContext } from '../../../../renderer/usePageContext';
 import PostEditor from './post-editor.vue';
 import { getDebug, parseAxiosError } from '../../../../lib/utils';
 import LogoIcon from '../../../../assets/icons/logo.svg';
-import Modal from '../../../../components/Modal.vue';
+import Modal from '../../../../components/modal.vue';
 import { defaultSiteTitle, domain } from '../../../../lib/config';
 
 const debug = getDebug('edit-post', 'page');

@@ -13,47 +13,59 @@ module.exports.ObjectStorage = {
   }),
   listObjects() {
     return new Promise((resolve, reject) => {
-      const data = [];
-      const stream = this.client.listObjects(bucketName, '', true);
-      stream.on('data', (obj) => {
-        data.push(obj);
-      });
-      stream.on('end', () => {
-        resolve(data);
-      });
-      stream.on('error', (err) => {
-        reject(err);
-      });
+      try {
+        const data = [];
+        const stream = this.client.listObjects(bucketName, '', true);
+        stream.on('data', (obj) => {
+          data.push(obj);
+        });
+        stream.on('end', () => {
+          resolve(data);
+        });
+        stream.on('error', (err) => {
+          reject(err);
+        });
+      } catch (e) {
+        reject(e);
+      }
     });
   },
   uploadFile(filePath, filename) {
     return new Promise((resolve, reject) => {
-      const fileStream = fs.createReadStream(filePath);
-      fs.stat(filePath, (err, stats) => {
-        if (err) return reject(err);
-        return this.client.putObject(bucketName, filename, fileStream, stats.size, (e, objInfo) => {
-          if (e) return reject(e);
-          return resolve(objInfo);
+      try {
+        const fileStream = fs.createReadStream(filePath);
+        fs.stat(filePath, (err, stats) => {
+          if (err) return reject(err);
+          return this.client.putObject(bucketName, filename, fileStream, stats.size, (e, objInfo) => {
+            if (e) return reject(e);
+            return resolve(objInfo);
+          });
         });
-      });
+      } catch (e) {
+        reject(e);
+      }
     });
   },
   getObject(filename) {
     return new Promise((resolve, reject) => {
-      this.client.getObject(bucketName, filename, (err, dataStream) => {
-        if (err) return reject(err);
-        const bufs = [];
-        dataStream.on('data', (chunk) => {
-          bufs.push(chunk);
+      try {
+        this.client.getObject(bucketName, filename, (err, dataStream) => {
+          if (err) return reject(err);
+          const bufs = [];
+          dataStream.on('data', (chunk) => {
+            bufs.push(chunk);
+          });
+          dataStream.on('end', () => {
+            resolve(Buffer.concat(bufs));
+          });
+          dataStream.on('error', (e) => {
+            reject(e);
+          });
+          return null;
         });
-        dataStream.on('end', () => {
-          resolve(Buffer.concat(bufs));
-        });
-        dataStream.on('error', (e) => {
-          reject(e);
-        });
-        return null;
-      });
+      } catch (e) {
+        reject(e);
+      }
     });
   },
 };

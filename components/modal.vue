@@ -40,7 +40,6 @@ export default {
 <style lang="scss">
 .Modal {
   transition: all ease 360ms;
-
   .modal-fullscreen {
     @apply fixed inset-0 w-full h-screen overflow-hidden;
     z-index: 9999;
@@ -49,6 +48,7 @@ export default {
     backdrop-filter: blur(1px);
 
     .modal-box {
+      z-index: 999999!important;
       @apply bg-white px-4 py-6 rounded-xl shadow-xl;
       max-height: 80vh;
       overflow-y: auto;
@@ -56,5 +56,14 @@ export default {
       overflow-x: auto;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
