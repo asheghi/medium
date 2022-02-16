@@ -12,6 +12,10 @@
 - [ ] research: deploying on serverless functions
 - [ ] issue: build in another directory, move result to dist
   - when build starts, it removes dist folder and assets are no longer available
+- [ ] Docker-Compose file for deployment:
+  - blog image from gcr
+  - postgresql image
+  - minio image
 
 
 ## Pages
