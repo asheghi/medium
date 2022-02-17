@@ -24,6 +24,7 @@ model Post {
   draftContent     String?
   draftTitle       String?
   summary   String?
+  twitter   String?
 }
 
 model Profile {
@@ -40,15 +41,4 @@ model User {
   password String
   Post    Post[]
   Profile Profile?
-}
-
-model Image {
-  id            Int     @id @default(autoincrement())
-  filename      String  @unique
-  createdAt     DateTime @default(now())
-  alt           String?
-  format        String?
-  size          Int?
-  width         Int?
-  height        Int?
 }
