@@ -1,13 +1,15 @@
 <template>
   <div class="SetupPage">
     <form @submit.prevent="submit">
-      <div class="head">
-        <h2>Setup Admin Account</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      <div class="left">
+        <div class="title">
+          Setup Admin
+        </div>
+        <p class="desc">
+          we don't know who's the boss yet!
         </p>
       </div>
-      <div>
+      <div class="right">
         <div class="form-group">
           <label
             for="email"
@@ -20,7 +22,7 @@
             type="email"
             class="input"
             aria-describedby="emailHelp"
-            placeholder="Enter email"
+            placeholder=""
           >
         </div>
         <div class="form-group">
@@ -34,18 +36,20 @@
             :disabled="loading"
             type="password"
             class="input"
-            placeholder="Password"
+            placeholder=""
           >
         </div>
+        <div class="form-group">
+          <button
+            type="submit"
+            class="button"
+            :disabled="loading"
+            :class="{loading}"
+          >
+            {{ loading ? 'Processing ...' : 'Continue' }}
+          </button>
+        </div>
       </div>
-      <button
-        type="submit"
-        class="button"
-        :disabled="loading"
-        :class="{loading}"
-      >
-        {{ loading ? 'Processing ...' : 'Continue' }}
-      </button>
     </form>
   </div>
 </template>
@@ -96,11 +100,12 @@ export default {
 .SetupPage {
   @apply flex justify-center items-center min-h-screen;
   form {
-    @apply flex flex-col gap-8 items-start
-    border border-primary px-8 py-10 rounded-xl border-dashed;
-    .head{
-      h2{
-        @apply font-bold opacity-75 text-lg;
+    @apply flex flex-col sm:flex-row gap-12 items-center
+    border border-gray-200 shadow-lg px-8 py-10 rounded-xl border-dashed;
+    .left{
+      .title{
+        @apply text-4xl font-extrabold text-transparent pb-4
+      bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600 sm:pr-8;
       }
       p{
         @apply opacity-50 text-sm;
@@ -113,11 +118,11 @@ export default {
       }
     }
     input {
-      @apply px-2 py-1 border rounded border-gray-300 ring-0 outline-primary;
+      @apply px-2 py-1 bg-gray-100 border rounded border-gray-300 ring-0 outline-primary;
     }
 
     .button {
-      @apply border border-primary transition bg-primary text-white px-4 py-1 rounded text-lg;
+      @apply border border-primary transition font-bold bg-primary text-white px-4 py-1 rounded text-lg;
       &:hover,&:focus{
         @apply bg-white text-primary border border-primary;
       }
