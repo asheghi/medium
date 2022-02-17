@@ -73,11 +73,11 @@ export default {
 </script>
 <style lang="scss">
 .BlogHeader {
-  @apply flex w-full justify-between items-center py-4 mx-auto container px-4 lg:px-0;
+  @apply flex font-sans w-full justify-between items-center py-4 mx-auto container px-4 lg:px-0;
   .brand{
     @apply flex items-center gap-2 text-2xl;
     .name{
-      @apply tracking-wider;
+      @apply tracking-tighter font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600;
     }
   }
   .links{

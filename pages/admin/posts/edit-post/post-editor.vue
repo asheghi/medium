@@ -421,9 +421,13 @@ import Heading from '@tiptap/extension-heading';
 import Text from '@tiptap/extension-text';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+// load all highlight.js languages
+import { lowlight } from 'lowlight/lib/common';
 import InsertMedia from './InsertMedia.vue';
 import TModal from '../../../../components/modal.vue';
 import DynamicIcon from '../../../../components/DynamicIcon';
+// load all highlight.js languages
 
 export default {
   name: 'PostEditor',
@@ -475,6 +479,9 @@ export default {
         }),
         Link.configure({
           openOnClick: false,
+        }),
+        CodeBlockLowlight.configure({
+          lowlight,
         }),
       ],
       onUpdate: ({ editor }) => {
@@ -601,7 +608,7 @@ export default {
 
 <style lang="scss">
 .PostEditor {
-  @apply flex flex-col gap-4 container mx-auto;
+  @apply flex prose flex-col gap-4 container mx-auto -mx-4;
   .top-menu {
     width: 0;
     height: 0;

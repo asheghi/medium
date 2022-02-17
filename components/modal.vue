@@ -49,7 +49,7 @@ export default {
 
     .modal-box {
       z-index: 999999!important;
-      @apply bg-white px-4 py-6 rounded-xl shadow-xl;
+      @apply font-sans bg-white px-4 py-6 rounded-xl shadow-xl;
       max-height: 80vh;
       overflow-y: auto;
       max-width: 80vw;

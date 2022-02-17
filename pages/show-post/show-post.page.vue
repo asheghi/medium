@@ -2,6 +2,25 @@
   <div class="">
     <BlogHeader />
     <div
+      v-if="post"
+      class="ShowPost"
+    >
+      <h1
+        class="title"
+        v-text="post.title"
+      />
+      <p
+        class="short-desc"
+        v-text="post.summary"
+      />
+      <div
+        v-if="post.content"
+        class="post-content"
+        v-html="post.content"
+      />
+    </div>
+    <BlogFooter class="footer" />
+    <div
       v-if="preview"
       class="preview"
     >
@@ -9,29 +28,6 @@
         Preview Mode
       </div>
     </div>
-    <div
-      v-if="post"
-      class="ShowPost"
-    >
-      <div
-        class="content prose"
-      >
-        <h2
-          class="title"
-          v-text="post.title"
-        />
-        <p
-          class="short-desc"
-          v-text="post.summary"
-        />
-        <div
-          v-if="post.content"
-          class="post-content"
-          v-html="post.content"
-        />
-      </div>
-    </div>
-    <BlogFooter class="footer" />
   </div>
 </template>
 
@@ -61,27 +57,38 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../assets/styles/post";
 .ShowPost{
-  @apply container mx-auto px-4 lg:px-0;
-  .content{
-    @apply mt-12;
+  @apply container mx-auto lg:px-0 prose;
+  max-width: 640px;
+  @screen md{
+    max-width: 768px;
+  }
+  .post-content, .title{
+    @apply mt-16 mb-2;
+  }
+  .short-desc{
+    @apply opacity-75;
   }
 
   hr{
     width: 340px;
-    margin: 0 auto;
+    margin: 3rem auto;
   }
   img{
     margin: 0 auto;
     @apply rounded;
   }
 }
+.title{
+  @apply text-3xl text-transparent bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600
+}
 
 .preview{
   @apply fixed bottom-8 left-0 right-0 text-center;
   .text{
     @apply text-primary bg-white border border-primary rounded-full inline-block
-    px-2 py-1;
+    px-2 py-1 animate-bounce shadow-xl;
   }
 }
 </style>

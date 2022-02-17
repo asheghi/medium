@@ -41,7 +41,7 @@ export default {
 .HomePostItem{
   @apply py-3 cursor-pointer transition flex flex-col gap-2;
   .title{
-    @apply text-2xl;
+    @apply text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600;
   }
   .summary{
     @apply opacity-75;

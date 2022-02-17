@@ -1,5 +1,5 @@
 <template>
-  <div class="ManagePosts">
+  <div class="ManagePosts font-sans">
     <div class="top">
       <h2 class="head">
         Posts

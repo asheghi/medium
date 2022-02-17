@@ -41,6 +41,7 @@
     <PostEditor
       v-if="post && hasMounted"
       v-model="form.draftContent"
+      class="-mx-4"
     />
     <Modal
       ref="modal"
@@ -192,6 +193,7 @@ export default {
 };
 </script>
 <style lang="scss">
+@import "../../../../assets/styles/post";
 .EditPost {
   @apply mx-auto container flex flex-col px-4 lg:px-0;
 
@@ -205,9 +207,10 @@ export default {
   }
 
   .title {
-    @apply w-full mb-8;
+    @apply w-full mb-8 -mx-4;
     input {
-      @apply w-full rounded-xl py-4 px-0 text-2xl outline-0;
+      @apply w-full rounded-xl py-4 px-4 text-2xl outline-0 font-extrabold text-4xl
+      border border-gray-200 border-dashed;
     }
   }
 }

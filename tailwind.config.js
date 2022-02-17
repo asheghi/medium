@@ -5,6 +5,10 @@ module.exports = {
     './components/**/*.{vue,js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily: {
+      mono: ['JetBrainsMono', 'monospace'],
+      sans: ['Open Sans', 'sans-serif'],
+    },
     extend: {
       colors: {
         primary: {
