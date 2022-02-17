@@ -5,33 +5,36 @@
       :src="getImagePreview"
       :alt="file.name"
     >
-    <div class="text">
-      {{ file.name }} ({{ kb }} kb)
-    </div>
-    <div
-      v-if="uploaded"
-      class="uploaded"
-    >
-      Uploaded file!
-    </div>
-    <div
-      v-if="!uploaded"
-      class="buttons"
-    >
-      <button
-        class="bg-primary"
-        title="Remove"
-        @click="uploadFile"
+    <div class="overlay">
+      <div class="text">
+        {{ file.name }} ({{ kb }} kb)
+      </div>
+      <div
+        v-if="uploaded"
+        class="uploaded text"
       >
-        Upload file
-      </button>
-      <button
-        class="bg-red-500"
-        title="Remove"
-        @click="removeFile"
+        Uploaded file!
+      </div>
+      <div
+        v-if="!uploaded"
+        class="buttons"
       >
-        Remove file
-      </button>
+        <button
+          class="bg-primary"
+          title="Remove"
+          :disabled="loading"
+          @click="uploadFile"
+        >
+          {{ loading ? 'Uploading ...' : 'Upload file' }}
+        </button>
+        <button
+          class="bg-red-500"
+          title="Remove"
+          @click="removeFile"
+        >
+          Remove file
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +51,7 @@ export default {
       required: true,
     },
   },
-  emits: ['remove'],
+  emits: ['remove', 'uploaded'],
   data() {
     return {
       loading: false,
@@ -72,9 +75,10 @@ export default {
       body.append('image', this.file);
       this.loading = true;
       try {
-        const { status, data } = await ax.post('media/upload', body, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const { status } = await ax.post('media/upload', body, { headers: { 'Content-Type': 'multipart/form-data' } });
         if (status === 200) {
           this.uploaded = true;
+          this.$emit('uploaded', this.file);
         }
       } catch (e) {
         debug(parseAxiosError(e));
@@ -87,21 +91,30 @@ export default {
 </script>
 <style lang="scss">
 .FileUpload {
-  @apply flex flex-col relative py-4;
+  @apply flex flex-col relative my-4;
   img {
+    object-fit: cover;
+    min-width: 400px;
+    min-height: 120px;
     max-height: 400px;
-    @apply rounded-xl;
+    @apply rounded-xl m-0;
   }
+  .overlay{
+    @apply absolute inset-4 flex flex-col gap-4 justify-center items-center h-full;
 
-  .text {
-    @apply py-2 text-gray-500;
-  }
+    .text {
+      @apply rounded text-white px-2 py-1;
+      background: rgba(black, 0.5);
+    }
+    .uploaded{
+    }
 
-  .buttons {
-    @apply flex justify-center gap-8;
-    button {
-      @apply px-2 py-1 rounded text-sm  opacity-50 capitalize cursor-pointer;
-      @apply text-white opacity-100 ;
+    .buttons {
+      @apply flex justify-center gap-8;
+      button {
+        @apply px-2 py-1 rounded text-sm  opacity-50 capitalize cursor-pointer;
+        @apply text-white opacity-100 ;
+      }
     }
   }
 }

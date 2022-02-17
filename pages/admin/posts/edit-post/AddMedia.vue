@@ -21,6 +21,16 @@
         v-if="currentTab === TAB_UPLOAD"
         class="upload-content"
       >
+        <div class="files">
+          <fileUpload
+            v-for="(file,index) in files"
+            :key="index"
+            :file="file"
+            @remove="removeFile"
+            @uploaded="onFileUploaded"
+          />
+        </div>
+
         <div
           class="drop-area"
           @dragover.prevent
@@ -50,14 +60,6 @@
               @change="addFileInput"
             >
           </div>
-        </div>
-        <div class="files">
-          <fileUpload
-            v-for="(file,index) in files"
-            :key="index"
-            :file="file"
-            @remove="removeFile($event)"
-          />
         </div>
       </div>
       <div
@@ -132,6 +134,11 @@ export default {
     insertFromUrl() {
 
     },
+    onFileUploaded(arg) {
+      setTimeout(() => {
+        this.removeFile(arg);
+      }, 5000);
+    },
   },
 };
 </script>
@@ -154,7 +161,7 @@ export default {
     .upload-content {
       @apply py-1;
       .drop-area {
-        @apply border mt-8 h-56 rounded-2xl border-dashed border-2 border-primary;
+        @apply border my-8 h-56 rounded-2xl border-dashed border-2 border-primary;
         .inside{
           @apply flex flex-col justify-center items-center h-full gap-3;
           .icon{

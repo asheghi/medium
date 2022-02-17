@@ -26,17 +26,14 @@
         v-text="'Fetching images ...'"
       />
       <div class="images">
-        <div
+        <img
           v-for="image in files"
           :key="image.id"
           class="image"
+          :src="getThumbnailUrl(image)"
+          :alt="image.alt"
+          @click="onSelect(image)"
         >
-          <img
-            :src="getThumbnailUrl(image)"
-            :alt="image.alt"
-            @click="onSelect(image)"
-          >
-        </div>
       </div>
     </div>
     <AddMedia
@@ -59,6 +56,11 @@ export default {
       currentTab: 'library',
       loading: false,
     };
+  },
+  watch: {
+    currentTab(n, o) {
+      if (n !== o) this.fetchMedia();
+    },
   },
   mounted() {
     this.fetchMedia();
@@ -90,6 +92,7 @@ export default {
 <style lang="scss">
 .MediaLibrary{
   min-width: 400px;
+  max-width: 800px;
   @apply px-4;
   .top{
     @apply flex justify-between py-4;
@@ -108,11 +111,19 @@ export default {
   }
   .list-media{
     @apply p-4;
+    max-height: 500px;
+    overflow-y: auto;
     .images{
-      @apply flex flex-wrap gap-4;
+      max-width: 400px;
+      @apply flex flex-wrap gap-6 justify-between;
       img{
-        max-width: 200px;
-        max-height: 120px;
+        margin: 0;
+        min-width: 100px;
+        min-height: 50px;
+        width: 100px;
+        height: auto;
+        max-height: 100px;
+        object-fit: cover;
       }
     }
   }

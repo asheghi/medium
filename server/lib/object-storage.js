@@ -30,16 +30,17 @@ module.exports.ObjectStorage = {
       }
     });
   },
-  uploadFile(filePath, filename) {
+  uploadFile(filePath, filename, metadata = {}) {
     return new Promise((resolve, reject) => {
       try {
         const fileStream = fs.createReadStream(filePath);
         fs.stat(filePath, (err, stats) => {
           if (err) return reject(err);
-          return this.client.putObject(bucketName, filename, fileStream, stats.size, (e, objInfo) => {
+          const cb = (e, objInfo) => {
             if (e) return reject(e);
             return resolve(objInfo);
-          });
+          };
+          return this.client.putObject(bucketName, filename, fileStream, stats.size, metadata, cb);
         });
       } catch (e) {
         reject(e);

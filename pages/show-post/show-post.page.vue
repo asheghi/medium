@@ -59,7 +59,7 @@ export default {
 <style lang="scss">
 @import "../../assets/styles/post";
 .ShowPost{
-  @apply container mx-auto lg:px-0 prose;
+  @apply container mx-auto px-4 lg:px-0 prose;
   max-width: 640px;
   @screen md{
     max-width: 768px;

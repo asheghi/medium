@@ -35,11 +35,15 @@ app.use(authGuard);
 
 app.post('/upload', upload.any(), async (req, res) => {
   if (!req.files.length) return res.status(400).json({ msg: 'no files uploaded' });
-  const promises = req.files.map(async (file) => {
-    const { path, originalname } = file;
-    await ObjectStorage.uploadFile(path, originalname);
-    return originalname;
-  });
+  const promises = req.files
+    .filter((file) => file.mimetype.startsWith('image'))
+    .map(async (file) => {
+      const {
+        path, originalname,
+      } = file;
+      await ObjectStorage.uploadFile(path, originalname);
+      return originalname;
+    });
 
   const images = await Promise.all(promises);
   return res.json(images);
