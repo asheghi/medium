@@ -7,7 +7,7 @@
         </div>
         <div
           class="desc"
-          v-text="'Yet another login'"
+          v-text="'yet another login'"
         />
       </div>
       <div class="right">
@@ -98,7 +98,7 @@ export default {
 .LoginPage {
   @apply flex justify-center items-center min-h-screen;
   form {
-    @apply flex gap-16 items-start items-center
+    @apply flex flex-col sm:flex-row gap-12 items-start items-center
     border border-gray-300 px-12 py-10 rounded-xl border-dashed
     shadow-lg;
     .left{
