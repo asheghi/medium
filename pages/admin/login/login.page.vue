@@ -1,51 +1,58 @@
 <template>
   <div class="LoginPage">
     <form @submit.prevent="submit">
-      <div class="head">
-        <h2>Login </h2>
-        <p>
-          Lorem ipsum dolor sit amet
-        </p>
-      </div>
-      <div>
-        <div class="form-group">
-          <label
-            for="email"
-            class="form-label"
-          >Email address</label>
-          <input
-            id="email"
-            v-model="form.email"
-            :disabled="loading"
-            type="email"
-            class="input"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-          >
+      <div class="left">
+        <div class="title">
+          Login
         </div>
-        <div class="form-group">
-          <label
-            for="password"
-            class="form-label"
-          >Password</label>
-          <input
-            id="password"
-            v-model="form.password"
-            :disabled="loading"
-            type="password"
-            class="input"
-            placeholder="Password"
-          >
+        <div
+          class="desc"
+          v-text="'Yet another login'"
+        />
+      </div>
+      <div class="right">
+        <div>
+          <div class="form-group">
+            <label
+              for="email"
+              class="form-label"
+            >Email address</label>
+            <input
+              id="email"
+              v-model="form.email"
+              :disabled="loading"
+              type="email"
+              class="input"
+              aria-describedby="emailHelp"
+              placeholder=""
+            >
+          </div>
+          <div class="form-group">
+            <label
+              for="password"
+              class="form-label"
+            >Password</label>
+            <input
+              id="password"
+              v-model="form.password"
+              :disabled="loading"
+              type="password"
+              class="input"
+              placeholder=""
+            >
+          </div>
+          <div class="form-group">
+            <button
+              type="submit"
+              class="button"
+              :disabled="loading"
+              :class="{loading}"
+            >
+              {{ loading ? 'Processing ...' : 'Continue' }}
+            </button>
+          </div>
         </div>
       </div>
-      <button
-        type="submit"
-        class="button"
-        :disabled="loading"
-        :class="{loading}"
-      >
-        {{ loading ? 'Processing ...' : 'Continue' }}
-      </button>
     </form>
   </div>
 </template>
@@ -91,13 +98,17 @@ export default {
 .LoginPage {
   @apply flex justify-center items-center min-h-screen;
   form {
-    @apply flex flex-col gap-8 items-start
-    border border-primary px-12 py-10 rounded-xl border-dashed;
-    .head{
-      h2{
-        @apply font-bold opacity-75 text-lg;
+    @apply flex gap-16 items-start items-center
+    border border-gray-300 px-12 py-10 rounded-xl border-dashed
+    shadow-lg;
+    .left{
+      min-width: 200px;
+      @apply  flex flex-col justify-center items-start;
+      .title{
+        @apply text-4xl font-extrabold text-transparent pb-4
+        bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600;
       }
-      p{
+      .desc{
         @apply opacity-50 text-sm;
       }
     }
@@ -112,7 +123,8 @@ export default {
     }
 
     .button {
-      @apply border border-primary transition bg-primary text-white px-4 py-1 rounded text-lg;
+      @apply border border-primary transition bg-primary text-white px-4 py-1 rounded text-lg
+      font-bold;
       &:hover,&:focus{
         @apply bg-white text-primary border border-primary;
       }
