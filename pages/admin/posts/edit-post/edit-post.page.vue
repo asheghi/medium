@@ -1,21 +1,27 @@
 <template>
   <div class="EditPost">
     <div class="top flex gap-4 py-8 items-center">
-      <div class="flex mr-auto gap-4 items-center text-lg capitalize h-8">
+      <div class="flex items-center gap-4 items-center text-lg capitalize h-8">
         <LogoIcon
           width="32"
           height="32"
           class="logo"
         />
-        <div
-          v-if="loadingSave"
-          class="save-status text-sm opacity-50"
-        >
-          Saving changes ...
-        </div>
       </div>
       <a
-        class="text-xs opacity-75"
+        href="/admin"
+        class="h-full text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600"
+      >
+        Back to Posts
+      </a>
+      <div
+        v-if="loadingSave"
+        class="save-status text-sm opacity-50"
+      >
+        Saving changes ...
+      </div>
+      <a
+        class="ml-auto text-xs opacity-75"
         :href="'/post/' + post.slug+'?preview=true'"
         target="_blank"
       >Preview</a>
@@ -94,7 +100,7 @@ import { ax } from '../../../../lib/plugins/axios';
 import { usePageContext } from '../../../../renderer/usePageContext';
 import PostEditor from './post-editor.vue';
 import { getDebug, parseAxiosError } from '../../../../lib/utils';
-import LogoIcon from '../../../../assets/icons/logo.svg';
+import LogoIcon from '../../../../assets/icons/dynamic/icon-logo.svg';
 import Modal from '../../../../components/modal.vue';
 import { defaultSiteTitle, domain } from '../../../../lib/config';
 

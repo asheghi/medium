@@ -33,7 +33,7 @@
   </nav>
 </template>
 <script>
-import LogoIcon from '../assets/icons/logo.svg';
+import LogoIcon from '../assets/icons/dynamic/icon-logo.svg';
 import {
   brandName, githubLink, linkedinLink, twitterLink,
 } from '../lib/config';

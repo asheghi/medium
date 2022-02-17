@@ -22,7 +22,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/semycolon/vue3-vite-ssr-blog">
-    <img src="https://raw.githubusercontent.com/semycolon/vue3-vite-ssr-blog/master/assets/icons/logo.svg" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/semycolon/vue3-vite-ssr-blog/master/assets/icons/dynamic/icon-logo.svg" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Vite SSR Blog</h3>
