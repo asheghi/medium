@@ -18,6 +18,16 @@
         class="post-content"
         v-html="post.content"
       />
+      <div
+        v-if="post.twitter"
+        class="discuss text-lg"
+      >
+        <a
+          class="no-underline text-primary"
+          :href="post.twitter"
+          target="_blank"
+        >Discuss on Twitter</a>
+      </div>
     </div>
     <BlogFooter class="footer" />
     <div

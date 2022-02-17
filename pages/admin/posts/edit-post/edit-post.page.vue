@@ -81,12 +81,41 @@
             >
           </div>
         </div>
-        <div class="text-center pt-4">
+        <div class="slug text-sm mt-4">
+          <div class="text-sm  mb-2">
+            <span class="opacity-50">
+              Have you shared this in Twitter?
+            </span>
+            <a
+              v-if="post.published"
+              :href="twitterLink"
+              target="_blank"
+              class="ml-2 text-primary"
+            >Share on Twitter</a>
+          </div>
+          <div class="flex items-center gap-1">
+            <input
+              v-model="twitter"
+              class="border rounded border-gray-300 px-2 py-1 outline-primary w-full"
+              type="text"
+              placeholder="link of tweet"
+            >
+          </div>
+        </div>
+        <div class="flex mt-4 gap-8 justify-center items-center ">
+          <a
+            v-if="post && post.published"
+            class="w-auto text-primary whitespace-nowrap"
+            :href="publishedLink"
+            target="_blank"
+            v-text="'Read Post'"
+          />
           <button
-            class="btn px-2 py-1 text-lg bg-primary text-white rounded"
+            :disabled="loadingPublish"
+            class="btn px-4 py-1 text-lg bg-primary text-white rounded"
             @click="publish"
           >
-            Publish
+            {{ loadingPublish ? 'Publishing ...' : 'Publish' }}
           </button>
         </div>
       </div>
@@ -125,7 +154,7 @@ export default {
     };
     const debouncedSave = debounce(this.saveDraft, 5000, options);
     const {
-      draftTitle, draftContent, slug, summary,
+      draftTitle, draftContent, slug, summary, twitter,
     } = this.post;
     return {
       form: { draftTitle, draftContent },
@@ -135,11 +164,19 @@ export default {
       slug,
       summary,
       hasMounted: false,
+      twitter,
     };
   },
   computed: {
     link() {
       return `${domain}/post/`;
+    },
+    twitterLink() {
+      const text = `${this.post.title}\n\n${domain}/post/${this.post.slug}`;
+      return `https://twitter.com/intent/tweet?text=${encodeURI(text)}`;
+    },
+    publishedLink() {
+      return this.link + this.post.slug;
     },
   },
   watch: {
@@ -171,6 +208,7 @@ export default {
       this.loadingSave = true;
       try {
         const { data, status } = await ax.post(`posts/save/${this.post.id}`, this.form);
+        // todo handle error - show error if post is not saved
       } catch (e) {
         debug(parseAxiosError(e));
       } finally {
@@ -181,13 +219,12 @@ export default {
       this.loadingPublish = true;
       try {
         const { draftContent, draftTitle } = this.form;
-        const { slug, summary } = this;
+        const { slug, summary, twitter } = this;
         const { data, status } = await ax.post(`posts/publish/${this.post.id}`, {
-          draftTitle, draftContent, slug, summary,
+          draftTitle, draftContent, slug, summary, twitter,
         });
         if (status === 200) {
-          this.$refs.modal.hide();
-          window.location.href = `/post/${this.slug}`;
+          this.post = data;
         }
       } catch (e) {
         debug(parseAxiosError(e));
