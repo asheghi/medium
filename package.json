@@ -44,7 +44,6 @@
     "highlight.js": "^11.4.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.debounce": "^4.0.8",
-    "lowlight": "^2.5.0",
     "marked": "^4.0.12",
     "minio": "^7.0.26",
     "moment": "^2.29.1",

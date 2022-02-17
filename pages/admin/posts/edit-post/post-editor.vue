@@ -422,12 +422,11 @@ import Text from '@tiptap/extension-text';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-// load all highlight.js languages
-import { lowlight } from 'lowlight/lib/common';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import lowlight from 'lowlight';
 import InsertMedia from './InsertMedia.vue';
 import TModal from '../../../../components/modal.vue';
 import DynamicIcon from '../../../../components/DynamicIcon';
-// load all highlight.js languages
 
 export default {
   name: 'PostEditor',
@@ -460,34 +459,36 @@ export default {
     };
   },
   async mounted() {
-    this.editor = new Editor({
-      content: this.modelValue,
-      editorProps: {
-        attributes: {
-          class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+    if (!import.meta.env.SSR) {
+      this.editor = new Editor({
+        content: this.modelValue,
+        editorProps: {
+          attributes: {
+            class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+          },
         },
-      },
-      extensions: [
-        StarterKit,
-        ImageExtension,
-        Document,
-        Paragraph,
-        Text,
-        Heading,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-        }),
-        Link.configure({
-          openOnClick: false,
-        }),
-        CodeBlockLowlight.configure({
-          lowlight,
-        }),
-      ],
-      onUpdate: ({ editor }) => {
-        this.$emit('update:modelValue', editor.getHTML());
-      },
-    });
+        extensions: [
+          StarterKit,
+          ImageExtension,
+          Document,
+          Paragraph,
+          Text,
+          Heading,
+          TextAlign.configure({
+            types: ['heading', 'paragraph'],
+          }),
+          Link.configure({
+            openOnClick: false,
+          }),
+          CodeBlockLowlight.configure({
+            lowlight,
+          }),
+        ],
+        onUpdate: ({ editor }) => {
+          this.$emit('update:modelValue', editor.getHTML());
+        },
+      });
+    }
     await this.$nextTick();
     window.e = this.editor;
     this.editor.on('focus', () => {
