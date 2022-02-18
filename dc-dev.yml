@@ -1,0 +1,42 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - "./data/db_data:/var/lib/postgresql/data"
+    env_file:
+      - .env
+  adminer:
+      image: adminer
+      restart: always
+      ports:
+        - "0.0.0.0:8080:8080"
+
+  minio:
+    image: "minio/minio"
+    command: [ "server", "/data", "--console-address" ,":9001" ]
+    restart: always
+    ports:
+      - "0.0.0.0:9000:9000"
+    env_file:
+      - .env
+    volumes:
+      - "./data/minio_data:/data"
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    env_file:
+      - .env
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10; 
+      /usr/bin/mc alias set star http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb star/"${MINIO_BUCKET_NAME}";
+      /usr/bin/mc policy set public star/${MINIO_BUCKET_NAME};
+      exit 0;
+      "

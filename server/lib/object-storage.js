@@ -1,15 +1,15 @@
 const Minio = require('minio');
 const fs = require('fs');
 
-const bucketName = process.env.S3_BUCKET_NAME;
+const bucketName = process.env.MINIO_BUCKET_NAME;
 
 module.exports.ObjectStorage = {
   client: new Minio.Client({
-    endPoint: process.env.S3_END_POINT_URL,
-    port: +(process.env.S3_PORT || 443),
-    useSSL: process.env.S3_SSL !== 'false',
-    accessKey: process.env.S3_ACCESS_KEY,
-    secretKey: process.env.S3_SECRET_KEY,
+    endPoint: process.env.MINIO_END_POINT_URL,
+    port: +process.env.MINIO_PORT,
+    useSSL: false, // process.env.MINIO_SSL !== 'false',
+    accessKey: process.env.MINIO_ROOT_USER,
+    secretKey: process.env.MINIO_ROOT_PASSWORD,
   }),
   listObjects() {
     return new Promise((resolve, reject) => {

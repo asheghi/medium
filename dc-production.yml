@@ -1,0 +1,54 @@
+version: "3"
+services:
+  blog:
+    #    image: ghcr.io/semycolon/vue3-vite-ssr-blog:master
+    build: .
+    command: >
+      bash -c "npm run prisma:deploy && npm run start"
+    ports:
+      - "${HOST}:${PORT}:${PORT}"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}"
+    depends_on:
+      - minio
+      - createbuckets
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - "./data/db_data:/var/lib/postgresql/data"
+    env_file:
+      - .env
+  adminer:
+      image: adminer
+      restart: always
+      ports:
+        - "127.0.0.1:8080:8080"
+
+  minio:
+    image: "minio/minio"
+    command: [ "server", "/data" ]
+    restart: always
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    volumes:
+      - "./data/minio_data:/data"
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    env_file:
+      - .env
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10; 
+      /usr/bin/mc alias set star http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb star/"${MINIO_BUCKET_NAME}";
+      /usr/bin/mc policy set public star/${MINIO_BUCKET_NAME};
+      exit 0;
+      "

@@ -176,7 +176,7 @@ export default {
       return `https://twitter.com/intent/tweet?text=${encodeURI(text)}`;
     },
     publishedLink() {
-      return this.link + this.post.slug;
+      return `/post/${this.post.slug}`;
     },
   },
   watch: {
