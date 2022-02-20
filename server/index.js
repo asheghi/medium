@@ -51,7 +51,10 @@ async function startServer() {
   app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
     console.log(`Server running at http://${hostname}:${port}`);
-    process.send('ready');
+    try {
+      process.send('ready');
+    } catch (e) {
+    }
   });
 }
 
