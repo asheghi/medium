@@ -2,19 +2,18 @@
 
 ## Server
 - [ ] unit Testing for Apis (router/service)
-- [ ] express Request Validator
-- [ ] rate Limiter
-- [ ] express Common Security Measures
-- [ ] stateless Session Storage (database)
-- [ ] load routes,services dynamically based on folder structure
-- [ ] proper cache headers for SSR only pages, to decrease server load
-- [ ] ability to override server-config values
-- [ ] research: deploying on serverless functions
-- [ ] issue: build in another directory, move result to dist
-  - when build starts, it removes dist folder and assets are no longer available
-- [ ] Docker-Compose file for deployment:
-  - blog image from gcr
-  - postgresql image
+- [ ] EXpress Request Validator
+- [ ] Express Rate Limiter
+- [ ] Express Common Security Measures
+- [ ] load routes, services dynamically based on the folder structure
+- [x] proper cache headers for SSR only pages, to decrease server load
+- [ ] Customization Features
+- [x] Stateless, move file storage, database out
+- [ ] issue: build in another directory, move the result to dist
+  - when a build starts, it removes the dist folder and assets are no longer available
+- [x] Docker-Compose file for deployment:
+  - blog image from GCR
+  - PostgreSQL image
   - minio image
 
 
