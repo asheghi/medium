@@ -11,4 +11,7 @@ export default {
       '@': path.resolve(__dirname),
     },
   },
+  build:{
+    outDir:'./dist-tmp'
+  }
 };

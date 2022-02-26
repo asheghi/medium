@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "npm run server",
     "prod": "npm run build && npm run server:prod",
-    "build": "dotenv vite build && vite build --ssr && npm run prisma:gen",
+    "build": "dotenv vite build && vite build --ssr && npm run prisma:gen && rm -rf dist && mv dist-tmp dist",
     "server": "dotenv node ./server",
     "server:prod": "dotenv -v NODE_ENV=production node ./server",
     "start": "npm run server:prod",
