@@ -1,8 +1,8 @@
 # Todos
 
-## Server
+## Back-End
 - [ ] unit Testing for Apis (router/service)
-- [ ] EXpress Request Validator
+- [ ] Express Request Validator
 - [ ] Express Rate Limiter
 - [ ] Express Common Security Measures
 - [ ] load routes, services dynamically based on the folder structure
@@ -13,9 +13,24 @@
   - when a build starts, it removes the dist folder and assets are no longer available
 - [x] Docker-Compose file for deployment:
   - blog image from GCR
-  - PostgreSQL image
+  - Postgres image
   - minio image
 
 
-## Pages
+
+## Front-End
+### Common
+- [ ] e2e tests
+- [ ] refactoring components,styles
+
 ### home page
+- [ ] unit tests
+
+### admin: manage posts
+- [ ] design a header
+- [ ] design a context menu for posts
+- [ ] re-design list of posts
+- [ ] delete post confirmation
+
+### admin: edit post
+- [ ] context menu of post

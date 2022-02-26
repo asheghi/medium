@@ -1,6 +1,7 @@
 <template>
   <div class="PostItem">
     <a
+      data-test="post-link"
       :href="getTitleLink(post)"
       class="title"
       v-text="title"

@@ -7,3 +7,6 @@ yarn.lock
 **/*.db-journal
 sessions
 data
+.env*
+cypress/videos
+cypress/screenshots

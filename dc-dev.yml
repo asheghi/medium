@@ -6,7 +6,7 @@ services:
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
-      - "./data/db_data:/var/lib/postgresql/data"
+      - "/tmp/blog_db_data:/var/lib/postgresql/data"
     env_file:
       - .env
   adminer:
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     volumes:
-      - "./data/minio_data:/data"
+      - "/tmp/blog_minio_data:/data"
 
   createbuckets:
     image: minio/mc

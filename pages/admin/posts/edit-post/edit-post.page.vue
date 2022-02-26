@@ -26,6 +26,7 @@
         target="_blank"
       >Preview</a>
       <button
+        data-test="publish-modal-btn"
         class="btn"
         @click="$refs.modal.show()"
       >
@@ -34,17 +35,20 @@
     </div>
     <div class="title">
       <input
+        data-test="title"
         v-model="form.draftTitle"
         placeholder="choose a great title"
       >
     </div>
     <div
+      data-test="loading"
       v-if="!(post && hasMounted)"
       class="loading-editor opacity-0 animate-pulse"
     >
       Loading Editor ...
     </div>
     <PostEditor
+      test-data="editor"
       v-if="post && hasMounted"
       v-model="form.draftContent"
       class="-mx-4"
@@ -58,6 +62,7 @@
             Write a summary for your post
           </div>
           <textarea
+            data-test="summary"
             v-model="summary"
             class="border border-gray-200 w-full px-4 py-2 rounded outline-primary"
             type="text"
@@ -81,7 +86,10 @@
             >
           </div>
         </div>
-        <div class="slug text-sm mt-4">
+        <div
+          v-if="post && post.published"
+          class="twitter text-sm mt-4"
+        >
           <div class="text-sm  mb-2">
             <span class="opacity-50">
               Have you shared this in Twitter?
@@ -104,6 +112,7 @@
         </div>
         <div class="flex mt-4 gap-8 justify-center items-center ">
           <a
+            data-test="read-post"
             v-if="post && post.published"
             class="w-auto text-primary whitespace-nowrap"
             :href="publishedLink"
@@ -111,6 +120,7 @@
             v-text="'Read Post'"
           />
           <button
+            data-test="submit-publish"
             :disabled="loadingPublish"
             class="btn px-4 py-1 text-lg bg-primary text-white rounded"
             @click="publish"

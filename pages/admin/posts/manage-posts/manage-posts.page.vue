@@ -4,47 +4,49 @@
       <h2 class="head">
         Posts
       </h2>
-      <div
-        :class="{loading:loadingCreate}"
-        class="btn"
-        @click="createPost"
+      <button
+          data-test="new-post"
+          :class="{loading:loadingCreate}"
+          class="btn"
+          :disabled="loadingCreate.value"
+          @click="createPost"
       >
         {{ loadingCreate ? 'Processing...' : 'New Post' }}
-      </div>
+      </button>
     </div>
     <div class="tabs">
       <div
-        class="tab"
-        :class="{active:currentTab === DRAFTS}"
-        @click="currentTab = DRAFTS"
+          class="tab"
+          :class="{active:currentTab === DRAFTS}"
+          @click="currentTab = DRAFTS"
       >
         Drafts
       </div>
       <div
-        class="tab"
-        :class="{active:currentTab === PUBLISHED}"
-        @click="currentTab = PUBLISHED"
+          class="tab"
+          :class="{active:currentTab === PUBLISHED}"
+          @click="currentTab = PUBLISHED"
       >
         Published
       </div>
     </div>
     <div class="list">
       <PostsList
-        :posts="posts_filtered"
-        @deletedPost="onPostDeleted"
-        @unPublishedPost="onUnPublishedPost"
+          :posts="posts_filtered"
+          @deletedPost="onPostDeleted"
+          @unPublishedPost="onUnPublishedPost"
       />
     </div>
   </div>
 </template>
 <script>
-import { provide, reactive, ref } from 'vue';
-import { usePageContext } from '../../../../renderer/usePageContext';
+import {provide, reactive, ref} from 'vue';
+import {usePageContext} from '../../../../renderer/usePageContext';
 import PostsList from './posts-list.vue';
-import { DRAFTS, PUBLISHED } from './utils';
-import { defaultSiteTitle } from '../../../../lib/config';
-import { ax } from '../../../../lib/plugins/axios';
-import { getDebug, parseAxiosError } from '../../../../lib/utils';
+import {DRAFTS, PUBLISHED} from './utils';
+import {defaultSiteTitle} from '../../../../lib/config';
+import {ax} from '../../../../lib/plugins/axios';
+import {getDebug, parseAxiosError} from '../../../../lib/utils';
 
 const debug = getDebug('manage-posts:page');
 
@@ -52,9 +54,9 @@ export default {
   pageTitle: `Dashboard - ${defaultSiteTitle}`,
   cacheControl: 'no-store',
   name: 'ListPosts',
-  components: { PostsList },
+  components: {PostsList},
   setup() {
-    const { posts: originalPosts } = usePageContext();
+    const {posts: originalPosts} = usePageContext();
     const posts = ref(originalPosts);
 
     const currentTab = ref(DRAFTS);
@@ -64,10 +66,12 @@ export default {
     const createPost = async () => {
       loadingCreate.value = true;
       try {
-        const { status, data } = await ax.post('posts/anotherOne');
+        const {status, data} = await ax.post('posts/anotherOne');
         if (status === 200 && data && data.id) {
           window.location.href = `/admin/post/${data.id}/edit`;
-          await new Promise((r) => { setTimeout(r); }, 1500);
+          await new Promise((r) => {
+            setTimeout(r);
+          }, 1500);
         }
       } catch (e) {
         debug(parseAxiosError(e));
@@ -82,7 +86,7 @@ export default {
   },
   computed: {
     posts_filtered() {
-      const { currentTab, posts } = this;
+      const {currentTab, posts} = this;
       if (currentTab === DRAFTS) {
         return posts.filter((it) => it.draftTitle || it.draftContent);
       }
@@ -118,7 +122,7 @@ export default {
       @apply rounded px-2 py-1  capitalize text-primary border-primary
       hover:shadow-lg active:shadow-sm hover:bg-primary active:scale-95
       hover:text-white hover:scale-110 transform  transition cursor-pointer;
-      &.loading{
+      &.loading {
         @apply cursor-progress opacity-75 animate-pulse;
       }
     }

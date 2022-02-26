@@ -41,6 +41,7 @@
         </div>
         <div class="form-group">
           <button
+            data-test="submit"
             type="submit"
             class="button"
             :disabled="loading"
