@@ -28,7 +28,7 @@
 <h3 align="center">Vite SSR Blog</h3>
 
   <p align="center">
-    yet another blog made with Node.js and Vue.js
+    yet another Medium Clone made with Node.js and Vue
     <br />
     <a href="https://github.com/semycolon/vue3-vite-ssr-blog/tree/master/docs"><strong>Explore the docs »</strong></a>
     <br />
