@@ -21,23 +21,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/semycolon/vue3-vite-ssr-blog">
-    <img src="https://raw.githubusercontent.com/semycolon/vue3-vite-ssr-blog/master/assets/icons/dynamic/icon-logo.svg" alt="Logo" width="80" height="80">
+  <a href="https://github.com/semycolon/medium">
+    <img src="https://raw.githubusercontent.com/semycolon/medium/master/assets/icons/dynamic/icon-logo.svg" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Vite SSR Blog</h3>
+<h3 align="center">Medium Clone</h3>
 
   <p align="center">
     yet another Medium Clone made with Node.js and Vue
     <br />
-    <a href="https://github.com/semycolon/vue3-vite-ssr-blog/tree/master/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/semycolon/medium/tree/master/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://codeify.ir/">View Demo</a>
     ·
-    <a href="https://github.com/semycolon/vue3-vite-ssr-blog/issues">Report Bug</a>
+    <a href="https://github.com/semycolon/medium/issues">Report Bug</a>
     ·
-    <a href="https://github.com/semycolon/vue3-vite-ssr-blog/issues">Request Feature</a>
+    <a href="https://github.com/semycolon/medium/issues">Request Feature</a>
   </p>
 </div>
 
@@ -76,12 +76,12 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://image.thum.io/get/maxAge/12/width/700/height/500https://codeify.ir) -->
 
-There are many great Blogs available on GitHub; however, 
-I didn't find one that really suited my needs so I created my own.
-i want a blog to be:
-- light-weight, not bloated with tons of un-necessary features
-- fast and easy to deploy
-- elegant and simple blogging experience
+While there are many great blog posts available on GitHub, I couldn't find one that fits my needs, so I created my own.
+
+An ideal blog would be: 
+- light, not bloated with tons of unnecessary features 
+- fast, easy to deploy 
+- elegant and simple to use
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -108,8 +108,8 @@ To get a local copy up and running follow these simple example steps.
 This is an example of how to list things you need to use the software and how to install them.
 1. Clone the repo
    ```sh
-   git clone https://github.com/semycolon/vue3-vite-ssr-blog.git
-   cd vue3-vite-ssr-blog
+   git clone https://github.com/semycolon/medium.git
+   cd medium
    ```
 
 2. Configure Envronment Variables 
@@ -138,8 +138,8 @@ This is an example of how to list things you need to use the software and how to
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/semycolon/vue3-vite-ssr-blog.git
-   cd vue3-vite-ssr-blog
+   git clone https://github.com/semycolon/medium.git
+   cd medium
    ```
 2. Configure Envronment Variables 
    ```sh
@@ -194,7 +194,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Your Name - [@your_twitter](https://twitter.com/codeify_ir) - Asheghi.sh@gmail.com
 
-Project Link: [https://github.com/semycolon/vue3-vite-ssr-blog](https://github.com/semycolon/vue3-vite-ssr-blog)
+Project Link: [https://github.com/semycolon/medium](https://github.com/semycolon/medium)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -231,16 +231,16 @@ Project Link: [https://github.com/semycolon/vue3-vite-ssr-blog](https://github.c
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/semycolon/vue3-vite-ssr-blog.svg?style=for-the-badge
-[contributors-url]: https://github.com/semycolon/vue3-vite-ssr-blog/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/semycolon/vue3-vite-ssr-blog.svg?style=for-the-badge
-[forks-url]: https://github.com/semycolon/vue3-vite-ssr-blog/network/members
-[stars-shield]: https://img.shields.io/github/stars/semycolon/vue3-vite-ssr-blog.svg?style=for-the-badge
-[stars-url]: https://github.com/semycolon/vue3-vite-ssr-blog/stargazers
-[issues-shield]: https://img.shields.io/github/issues/semycolon/vue3-vite-ssr-blog.svg?style=for-the-badge
-[issues-url]: https://github.com/semycolon/vue3-vite-ssr-blog/issues
-[license-shield]: https://img.shields.io/github/license/semycolon/vue3-vite-ssr-blog.svg?style=for-the-badge
-[license-url]: https://github.com/semycolon/vue3-vite-ssr-blog/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/semycolon/medium.svg?style=for-the-badge
+[contributors-url]: https://github.com/semycolon/medium/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/semycolon/medium.svg?style=for-the-badge
+[forks-url]: https://github.com/semycolon/medium/network/members
+[stars-shield]: https://img.shields.io/github/stars/semycolon/medium.svg?style=for-the-badge
+[stars-url]: https://github.com/semycolon/medium/stargazers
+[issues-shield]: https://img.shields.io/github/issues/semycolon/medium.svg?style=for-the-badge
+[issues-url]: https://github.com/semycolon/medium/issues
+[license-shield]: https://img.shields.io/github/license/semycolon/medium.svg?style=for-the-badge
+[license-url]: https://github.com/semycolon/medium/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com
 [product-screenshot]: images/screenshot.png
