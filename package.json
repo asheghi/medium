@@ -2,9 +2,9 @@
   "scripts": {
     "dev": "npm run server",
     "prod": "npm run build && npm run server:prod",
-    "build": "dotenv vite build && vite build --ssr && npm run prisma:gen && rm -rf dist && mv dist-tmp dist",
-    "server": "dotenv node ./server",
-    "server:prod": "dotenv -v NODE_ENV=production node ./server",
+    "build": "npx dotenv vite build && vite build --ssr && npm run prisma:gen && rm -rf dist && mv dist-tmp dist",
+    "server": "npx dotenv node ./server",
+    "server:prod": "npx dotenv -v NODE_ENV=production node ./server",
     "start": "npm run server:prod",
     "postinstall": "npm run prisma:gen",
     "lint": "eslint . --ext .js,.vue",
