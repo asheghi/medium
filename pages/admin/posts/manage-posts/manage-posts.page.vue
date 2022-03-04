@@ -2,7 +2,7 @@
   <div class="ManagePosts font-sans">
     <div class="top">
       <h2 class="head">
-        Posts
+        Your Stories
       </h2>
       <button
           data-test="new-post"
@@ -11,7 +11,7 @@
           :disabled="loadingCreate.value"
           @click="createPost"
       >
-        {{ loadingCreate ? 'Processing...' : 'New Post' }}
+        {{ loadingCreate ? 'Processing...' : 'Write a Story' }}
       </button>
     </div>
     <div class="tabs">
@@ -20,14 +20,14 @@
           :class="{active:currentTab === DRAFTS}"
           @click="currentTab = DRAFTS"
       >
-        Drafts
+        Drafts {{draftsCount}}
       </div>
       <div
           class="tab"
           :class="{active:currentTab === PUBLISHED}"
           @click="currentTab = PUBLISHED"
       >
-        Published
+        Published {{publishedCount}}
       </div>
     </div>
     <div class="list">
@@ -42,7 +42,7 @@
 <script>
 import {provide, reactive, ref} from 'vue';
 import {usePageContext} from '../../../../renderer/usePageContext';
-import PostsList from './posts-list.vue';
+import PostsList from './components/posts-list.vue';
 import {DRAFTS, PUBLISHED} from './utils';
 import {defaultSiteTitle} from '../../../../lib/config';
 import {ax} from '../../../../lib/plugins/axios';
@@ -95,6 +95,12 @@ export default {
       }
       return posts;
     },
+    draftsCount() {
+      return this.posts.filter(it => it.draftTitle || it.draftContent).length
+    },
+    publishedCount() {
+      return this.posts.filter(it => it.published).length
+    }
   },
   methods: {
     onPostDeleted(post) {
@@ -111,7 +117,7 @@ export default {
 .ManagePosts {
 
   max-width: 600px;
-  @apply mx-auto px-8 pt-16 mx-auto;
+  @apply mx-auto px-8 pt-8 mx-auto;
   .top {
     @apply flex justify-between  items-center;
     .head {
@@ -119,7 +125,7 @@ export default {
     }
 
     .btn {
-      @apply rounded px-2 py-1  capitalize text-primary border-primary
+      @apply rounded px-2 py-1 text-primary border-primary
       hover:shadow-lg active:shadow-sm hover:bg-primary active:scale-95
       hover:text-white hover:scale-110 transform  transition cursor-pointer;
       &.loading {
@@ -129,10 +135,10 @@ export default {
   }
 
   .tabs {
-    @apply flex gap-4 pt-6;
+    @apply flex gap-4 pt-6 border-b;
     .tab {
-      @apply text-gray-500 cursor-pointer transition-all text-xl
-      border border-transparent py-1;
+      @apply text-gray-500 cursor-pointer transition-all
+      border border-transparent py-1 pb-2;
       &.active {
         @apply cursor-default text-primary-600 border-b-primary;
       }
@@ -140,7 +146,7 @@ export default {
   }
 
   .list {
-    @apply flex flex-col mx-auto gap-4;
+    @apply flex flex-col mx-auto gap-4 pt-4;
 
   }
 }

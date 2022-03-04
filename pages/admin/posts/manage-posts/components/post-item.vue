@@ -2,7 +2,7 @@
   <div class="PostItem">
     <a
       data-test="post-link"
-      :href="getTitleLink(post)"
+      :href="getTitleLink(post,currentTab.value)"
       class="title"
       v-text="title"
     />
@@ -35,8 +35,8 @@
 <script>
 import {
   deletePost, DRAFTS, formatDateTime, getTitleLink, PUBLISHED, unPublishPost,
-} from './utils';
-import DynamicIcon from '../../../../components/DynamicIcon';
+} from '../utils';
+import DynamicIcon from '../../../../../components/DynamicIcon';
 
 const EDIT_POST = 'Edit Post';
 const DELETE_POST = 'Delete Post';

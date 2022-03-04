@@ -1,11 +1,11 @@
 import moment from 'moment';
 import { ax } from '../../../../lib/plugins/axios';
 
-export function getTitleLink(post) {
-  if (!post.published) {
+export function getTitleLink(post,currentTab) {
+  if (currentTab === DRAFTS) {
     return `/admin/post/${post.id}/edit`;
   }
-  if (post.published) {
+  if (currentTab === PUBLISHED) {
     return `/post/${post.slug}`;
   }
   return '';

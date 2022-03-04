@@ -1,18 +1,12 @@
 <template>
   <div class="EditPost">
+<!--    todo refactor header -->
     <div class="top flex gap-4 py-8 items-center">
-      <div class="flex items-center gap-4 items-center text-lg capitalize h-8">
-        <LogoIcon
-          width="32"
-          height="32"
-          class="logo"
-        />
-      </div>
       <a
         href="/admin"
-        class="h-full text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-primary-400 to-blue-600"
+        class="hover:underline hover:color-primary"
       >
-        Back to Posts
+        back to Posts
       </a>
       <div
         v-if="loadingSave"
@@ -33,11 +27,12 @@
         Publish
       </button>
     </div>
+
     <div class="title">
       <input
         data-test="title"
         v-model="form.draftTitle"
-        placeholder="choose a great title"
+        placeholder="Title"
       >
     </div>
     <div
@@ -260,10 +255,9 @@ export default {
   }
 
   .title {
-    @apply w-full mb-8 -mx-4;
+    @apply w-full mx-auto;
     input {
-      @apply w-full rounded-xl py-4 px-4 text-2xl outline-0 font-extrabold text-4xl
-      border border-gray-200 border-dashed;
+      @apply w-full rounded-xl py-4 text-2xl outline-0 font-extrabold text-5xl;
     }
   }
 }

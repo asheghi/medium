@@ -38,7 +38,7 @@ function getCacheControl(pageContext) {
 async function render(pageContext) {
   const app = createApp(pageContext);
   const appHtml = await renderToString(app);
-
+  const {url} = pageContext;
   const title = getPageTitle(pageContext);
   const desc = getPageDesc(pageContext);
   const cacheControl = getCacheControl(pageContext);
@@ -52,7 +52,27 @@ async function render(pageContext) {
         <title>${title}</title>
       </head>
       <body>
-        <div id="app">${dangerouslySkipEscape(appHtml)}</div>
+        ${url.startsWith('/admin') ? dangerouslySkipEscape(`<div id="page_loading" class="PageLoading">
+      <style>           
+            .PageLoading{
+                position: fixed;
+                background: white;
+                width:100%;
+                height: 100%;
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 2rem;
+                transition: all ease 320ms;
+                color: rgba(0,0,0,.5);
+                font-family: 'Open Sans', sans-serif;
+                letter-spacing: 4px;
+            }
+        </style>
+        Loading ...
+      </div> `) : ''}      
+        <div id="app" ${url.startsWith('/admin') ? dangerouslySkipEscape(`style="opacity: 0; transition: all ease 320ms;"`) : ""} >${dangerouslySkipEscape(appHtml)}</div>
       </body>
     </html>`;
 

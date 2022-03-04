@@ -609,7 +609,7 @@ export default {
 
 <style lang="scss">
 .PostEditor {
-  @apply flex prose flex-col gap-4 container mx-auto -mx-4;
+  @apply flex prose flex-col gap-4 container mx-auto;
   .top-menu {
     width: 0;
     height: 0;
@@ -642,7 +642,8 @@ export default {
 .ProseMirror {
   max-width: 100vw;
   width: 100%;
-  @apply w-full border border-dashed rounded-xl border-gray-300 px-4 py-2 m-0;
+  @apply w-full m-0;
+  min-height: 400px;
   /*> * + * {
     margin-top: 0.75em;
   }*/
