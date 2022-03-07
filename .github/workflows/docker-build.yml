@@ -24,7 +24,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ghcr.io/semycolon/vue3-vite-ssr-blog
+          images: ghcr.io/semycolon/medium
           tag-sha: true
           tag-edge: false
           tag-latest: true
