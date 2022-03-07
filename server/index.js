@@ -50,7 +50,8 @@ async function startServer() {
   const hostname = process.env.HOST || '127.0.0.1';
   app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server running at http://${hostname}:${port}`);
+    console.log(`Blog is listening at http://${hostname}:${port}`);
+    console.log(`Access Admin Dashboard at http://${hostname}:${port}/admin`);
     try {
       process.send('ready');
     } catch (e) {

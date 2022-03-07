@@ -1,16 +1,23 @@
 version: "3"
 services:
   blog:
-    #    image: ghcr.io/semycolon/vue3-vite-ssr-blog:master
-    build: .
+    image: ghcr.io/semycolon/vue3-vite-ssr-blog:master
     command: >
       bash -c "npm run prisma:deploy && npm run start"
     ports:
-      - "${HOST}:${PORT}:${PORT}"
-    env_file:
-      - .env
+      - "3000:3000"
     environment:
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}"
+      PORT: "3000"
+      JWT_SECRET: "supersecuresecret"
+      DATABASE_URL: "postgres://root:password@db/blog"
+      VITE_SITE_BRAND_NAME: "Medium"
+      VITE_DOMAIN_ADDRESS: "http://localhost:3000"
+      MINIO_END_POINT_URL: "0.0.0.0"
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "password"
+      MINIO_BUCKET_NAME: "blog"
+      MINIO_PORT: "9000"
+      MINIO_SSL: "false"
     depends_on:
       - minio
       - createbuckets
@@ -18,14 +25,16 @@ services:
     image: postgres
     restart: always
     volumes:
-      - "./data/db_data:/var/lib/postgresql/data"
-    env_file:
-      - .env
-  adminer:
-      image: adminer
-      restart: always
-      ports:
-        - "127.0.0.1:8080:8080"
+      - "/tmp/data/db_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "blog"
+#  adminer:
+#      image: adminer
+#      restart: always
+#      ports:
+#        - "127.0.0.1:8080:8080"
 
   minio:
     image: "minio/minio"
@@ -33,10 +42,14 @@ services:
     restart: always
     ports:
       - "9000:9000"
-    env_file:
-      - .env
+    environment:
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "password"
+      MINIO_BUCKET_NAME: "blog"
+      MINIO_PORT: "9000"
+      MINIO_SSL: "false"
     volumes:
-      - "./data/minio_data:/data"
+      - "/tmp/data/minio_data:/data"
 
   createbuckets:
     image: minio/mc
