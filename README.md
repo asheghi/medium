@@ -108,7 +108,7 @@ To get a local copy up and running follow these simple example steps.
 This is an example of how to list things you need to use the software and how to install them.
 1. Clone the repo
    ```sh
-   git clone https://github.com/semycolon/medium.git
+   git clone https://github.com/asheghi/medium.git
    cd medium
    ```
 
@@ -138,7 +138,7 @@ This is an example of how to list things you need to use the software and how to
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/semycolon/medium.git
+   git clone https://github.com/asheghi/medium.git
    cd medium
    ```
 2. Configure Envronment Variables 
@@ -175,28 +175,6 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@your_twitter](https://twitter.com/codeify_ir) - Asheghi.sh@gmail.com
-
-Project Link: [https://github.com/semycolon/medium](https://github.com/semycolon/medium)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
