@@ -91,7 +91,7 @@ export default {
       }
     },
   },
-  cacheControl: 'public, max-age=86400',
+  cacheControl: 'no-store',
 };
 </script>
 

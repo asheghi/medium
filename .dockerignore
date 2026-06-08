@@ -1,6 +1,9 @@
 node_modules
 dist
-node_modules
+dist-tmp
+.data
+plan
+.env*
 npm-debug.log
 Dockerfile*
 docker-compose*

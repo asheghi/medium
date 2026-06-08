@@ -16,10 +16,15 @@ const authenticateRequest = (req, res, next) => {
 module.exports.authenticateRequest = authenticateRequest;
 
 module.exports.authGuard = async (req, res, next) => {
-  if (!req.user) return res.status(401).send();
-  const exists = await prisma.user.findUnique({ where: { email: req.user.email } });
-  if (!exists) return res.status(401).send();
-  return next();
+  try {
+    if (!req.user) return res.status(401).send();
+    const exists = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!exists) return res.status(401).send();
+    req.user = { id: exists.id, email: exists.email };
+    return next();
+  } catch (error) {
+    return next(error);
+  }
 };
 
 module.exports.redirectUnAuthenticated = (req, res, next) => {

@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const hash = require('object-hash');
-const { jwtCookieField, jwtSecret } = require('../server-conf');
+const { jwtCookieField, jwtSecret, jwtExpiresIn } = require('../server-conf');
 
 module.exports.JwtUtils = {
   generateTokenForPayload(payload) {
-    return jwt.sign(payload, jwtSecret);
+    return jwt.sign(payload, jwtSecret, { expiresIn: jwtExpiresIn });
   },
   generateTokenForRequest(req, extraPayload) {
     const { ip } = req;
@@ -17,10 +17,8 @@ module.exports.JwtUtils = {
     if (!req.cookies) return false;
 
     const token = req.cookies[jwtCookieField];
-    const validSignature = this.verifyToken(token);
-    if (!validSignature) return false;
-
-    const payload = this.decodeToken(token);
+    const payload = this.verifyToken(token);
+    if (!payload || typeof payload !== 'object') return false;
     const { __h } = payload;
     const { ip } = req;
     const userAgent = req.headers['user-agent'];
@@ -33,19 +31,10 @@ module.exports.JwtUtils = {
   },
   verifyToken(token) {
     if (!token) return false;
-    let valid = false;
     try {
-      jwt.verify(token, jwtSecret);
-      valid = true;
+      return jwt.verify(token, jwtSecret);
     } catch (e) {
-      console.error(e);
-      valid = false;
-      // nothing
+      return false;
     }
-    return valid;
-  },
-  // note decode does not validate token
-  decodeToken(token) {
-    return jwt.decode(token);
   },
 };

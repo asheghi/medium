@@ -8,5 +8,11 @@ yarn.lock
 sessions
 data
 .env*
+!.env.example
+!.env.production.example
 cypress/videos
 cypress/screenshots
+plan/
+dist/
+dist-tmp/
+.data/

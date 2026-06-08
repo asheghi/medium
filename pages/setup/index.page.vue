@@ -90,7 +90,7 @@ export default {
       } catch (e) {
         console.error(e);
       } finally {
-        this.loading = true;
+        this.loading = false;
       }
     },
   },

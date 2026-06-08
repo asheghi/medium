@@ -1,6 +1,7 @@
 const express = require('express');
 const { createPageRenderer } = require('vite-plugin-ssr');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const { ApiRouter } = require('./api/api.index');
 const { accessControlMiddleware } = require('./lib/acl.middleware');
 
@@ -9,7 +10,24 @@ const root = `${__dirname}/..`;
 
 async function startServer() {
   const app = express();
-  app.enable('trust proxy');
+  app.set('trust proxy', 1);
+  app.disable('x-powered-by');
+  app.use(helmet({
+    contentSecurityPolicy: isProduction ? {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        frameAncestors: ["'none'"],
+      },
+    } : false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: 'same-site' },
+  }));
   app.use(cookieParser());
   app.use(ApiRouter);
 
@@ -52,9 +70,8 @@ async function startServer() {
     // eslint-disable-next-line no-console
     console.log(`Blog is listening at http://${hostname}:${port}`);
     console.log(`Access Admin Dashboard at http://${hostname}:${port}/admin`);
-    try {
+    if (typeof process.send === 'function') {
       process.send('ready');
-    } catch (e) {
     }
   });
 }

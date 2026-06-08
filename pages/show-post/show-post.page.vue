@@ -62,7 +62,9 @@ export default {
     const { post, preview } = pageContext;
     return { post, preview };
   },
-  cacheControl: 'public, max-age=43200',
+  cacheControl({ preview, post }) {
+    return preview || !post?.published ? 'no-store' : 'public, max-age=300';
+  },
 };
 </script>
 

@@ -422,11 +422,12 @@ import Text from '@tiptap/extension-text';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import lowlight from 'lowlight';
+import { common, createLowlight } from 'lowlight';
 import InsertMedia from './InsertMedia.vue';
 import TModal from '../../../../components/modal.vue';
 import DynamicIcon from '../../../../components/DynamicIcon';
+
+const lowlight = createLowlight(common);
 
 export default {
   name: 'PostEditor',

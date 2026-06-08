@@ -1,27 +1,21 @@
-FROM node:14
+FROM node:24-bookworm-slim
 
-# Create app directory
 WORKDIR /usr/src/app
+ENV DATA_DIR=/data
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
 
-RUN npm install
-# If you are building your code for production
-#RUN npm ci --only=production
-
-# Bundle app source
 COPY . .
-
-#added to npm build script
-#RUN npx prisma generate --schema ./server/prisma/schema.prisma
-
-RUN npm run build
+RUN npm run prisma:gen && npm run build
+RUN mkdir -p /data && chown -R node:node /data /usr/src/app
 
 EXPOSE 3000
+ENV NODE_ENV=production
+USER node
 
-RUN mkdir "/data"
-
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:docker" ]

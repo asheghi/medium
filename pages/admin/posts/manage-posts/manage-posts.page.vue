@@ -107,8 +107,8 @@ export default {
       this.posts = this.posts.filter((it) => it.id !== post.id);
     },
     onUnPublishedPost(post) {
-      const index = this.posts.findIndex((it) => it.id !== post.id);
-      this.posts[index].published = false;
+      const index = this.posts.findIndex((it) => it.id === post.id);
+      if (index >= 0) this.posts[index].published = false;
     },
   },
 };

@@ -1,67 +1,56 @@
-version: "3"
 services:
   blog:
-    image: ghcr.io/semycolon/vue3-vite-ssr-blog:master
-    command: >
-      bash -c "npm run prisma:deploy && npm run start"
+    build: .
+    image: ${BLOG_IMAGE:-medium-blog:local}
+    restart: unless-stopped
+    command: npm run start:docker
     ports:
-      - "3000:3000"
+      - "127.0.0.1:${HOST_PORT:-3000}:3000"
+    env_file:
+      - .env.production
     environment:
+      HOST: "0.0.0.0"
       PORT: "3000"
-      JWT_SECRET: "supersecuresecret"
-      DATABASE_URL: "postgres://root:password@db/blog"
-      VITE_SITE_BRAND_NAME: "Medium"
-      VITE_DOMAIN_ADDRESS: "http://localhost:3000"
-      MINIO_END_POINT_URL: "0.0.0.0"
-      MINIO_ROOT_USER: "root"
-      MINIO_ROOT_PASSWORD: "password"
-      MINIO_BUCKET_NAME: "blog"
+      MINIO_END_POINT_URL: "minio"
       MINIO_PORT: "9000"
       MINIO_SSL: "false"
     depends_on:
+      - db
       - minio
       - createbuckets
+
   db:
-    image: postgres
-    restart: always
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env.production
     volumes:
-      - "/tmp/data/db_data:/var/lib/postgresql/data"
-    environment:
-      POSTGRES_USER: "root"
-      POSTGRES_PASSWORD: "password"
-      POSTGRES_DB: "blog"
-#  adminer:
-#      image: adminer
-#      restart: always
-#      ports:
-#        - "127.0.0.1:8080:8080"
+      - postgres_data:/var/lib/postgresql/data
 
   minio:
-    image: "minio/minio"
-    command: [ "server", "/data" ]
-    restart: always
-    ports:
-      - "9000:9000"
-    environment:
-      MINIO_ROOT_USER: "root"
-      MINIO_ROOT_PASSWORD: "password"
-      MINIO_BUCKET_NAME: "blog"
-      MINIO_PORT: "9000"
-      MINIO_SSL: "false"
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    command: ["server", "/data"]
+    restart: unless-stopped
+    env_file:
+      - .env.production
     volumes:
-      - "/tmp/data/minio_data:/data"
+      - minio_data:/data
 
   createbuckets:
-    image: minio/mc
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
     depends_on:
       - minio
     env_file:
-      - .env
+      - .env.production
     entrypoint: >
       /bin/sh -c "
-      sleep 10; 
-      /usr/bin/mc alias set star http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc mb star/"${MINIO_BUCKET_NAME}";
-      /usr/bin/mc policy set public star/${MINIO_BUCKET_NAME};
+      sleep 10;
+      /usr/bin/mc alias set star http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb --ignore-existing star/$${MINIO_BUCKET_NAME};
+      /usr/bin/mc anonymous set download star/$${MINIO_BUCKET_NAME};
       exit 0;
       "
+
+volumes:
+  postgres_data:
+  minio_data:

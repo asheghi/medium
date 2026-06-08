@@ -1,6 +1,6 @@
 const fs = require('fs');
 const sharp = require('sharp');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 const { join } = require('path');
 const { PrismaClient } = require('@prisma/client');
 const { mediaDir } = require('../../server-conf');
@@ -17,7 +17,7 @@ module.exports.MediaService = {
     const {
       format, size, width, height,
     } = metadata;
-    const filename = `${uuid()}.${format}`;
+    const filename = `${randomUUID()}.${format}`;
     const newPath = join(mediaDir, filename);
     fs.renameSync(path, newPath);
 

@@ -7,7 +7,7 @@ module.exports.ObjectStorage = {
   client: new Minio.Client({
     endPoint: process.env.MINIO_END_POINT_URL,
     port: +process.env.MINIO_PORT,
-    useSSL: false, // process.env.MINIO_SSL !== 'false',
+    useSSL: process.env.MINIO_SSL === 'true',
     accessKey: process.env.MINIO_ROOT_USER,
     secretKey: process.env.MINIO_ROOT_PASSWORD,
   }),
@@ -67,6 +67,14 @@ module.exports.ObjectStorage = {
       } catch (e) {
         reject(e);
       }
+    });
+  },
+  removeObject(filename) {
+    return new Promise((resolve, reject) => {
+      this.client.removeObject(bucketName, filename, (error) => {
+        if (error) return reject(error);
+        return resolve();
+      });
     });
   },
 };
