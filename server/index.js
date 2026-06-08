@@ -1,5 +1,4 @@
 const express = require('express');
-const { createPageRenderer } = require('vite-plugin-ssr');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { ApiRouter } = require('./api/api.index');
@@ -9,6 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const root = `${__dirname}/..`;
 
 async function startServer() {
+  const { createDevMiddleware, renderPage } = await import('vike/server');
   const app = express();
   app.set('trust proxy', 1);
   app.disable('x-powered-by');
@@ -31,37 +31,30 @@ async function startServer() {
   app.use(cookieParser());
   app.use(ApiRouter);
 
-  let viteDevServer;
   if (isProduction) {
     app.use(express.static(`${root}/dist/client`, {
       // cache static assets for 24 hours
       cacheControl: 'public, max-age=86400',
     }));
   } else {
-    // eslint-disable-next-line global-require
-    const vite = require('vite');
-    viteDevServer = await vite.createServer({
-      root,
-      server: { middlewareMode: 'ssr' },
-    });
-    app.use(viteDevServer.middlewares);
+    const { devMiddleware } = await createDevMiddleware({ root });
+    app.use(devMiddleware);
   }
 
   app.use(accessControlMiddleware);
-  const renderPage = createPageRenderer({ viteDevServer, isProduction, root });
   app.get('*', async (req, res, next) => {
-    const url = req.originalUrl;
-    const { user } = req;
     const pageContextInit = {
-      url, user, reqQuery: req.query,
+      urlOriginal: req.originalUrl,
+      headersOriginal: req.headers,
+      user: req.user,
+      reqQuery: req.query,
     };
     const pageContext = await renderPage(pageContextInit);
-    const { httpResponse, redirect, cacheControl } = pageContext;
-    if (redirect) return res.redirect(redirect);
+    const { httpResponse } = pageContext;
     if (!httpResponse) return next();
-    const { body, statusCode, contentType } = httpResponse;
-    if (cacheControl) res.set('Cache-Control', cacheControl);
-    return res.status(statusCode).type(contentType).send(body);
+    const { body, statusCode, headers } = httpResponse;
+    headers.forEach(([name, value]) => res.setHeader(name, value));
+    return res.status(statusCode).send(body);
   });
 
   const port = process.env.PORT || 3000;

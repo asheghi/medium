@@ -90,7 +90,7 @@ An ideal blog would be:
 
 ### Built With
 
-* [Vite-SSR-Plugin](https://vite-plugin-ssr.com/)
+* [Vike](https://vike.dev/)
 * [Prisma.io](https://www.prisma.io/)
 * [Vue.js](https://vuejs.org/)
 * [TailwindsCSS](https://vuejs.org/)

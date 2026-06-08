@@ -40,23 +40,20 @@
   </div>
 </template>
 <script>
-import {provide, reactive, ref} from 'vue';
-import {usePageContext} from '../../../../renderer/usePageContext';
+import { provide, ref } from 'vue';
+import { useData } from 'vike-vue/useData';
 import PostsList from './components/posts-list.vue';
-import {DRAFTS, PUBLISHED} from './utils';
-import {defaultSiteTitle} from '../../../../lib/config';
-import {ax} from '../../../../lib/plugins/axios';
-import {getDebug, parseAxiosError} from '../../../../lib/utils';
+import { DRAFTS, PUBLISHED } from './utils';
+import { ax } from '../../../../lib/plugins/axios';
+import { getDebug, parseAxiosError } from '../../../../lib/utils';
 
 const debug = getDebug('manage-posts:page');
 
 export default {
-  pageTitle: `Dashboard - ${defaultSiteTitle}`,
-  cacheControl: 'no-store',
   name: 'ListPosts',
-  components: {PostsList},
+  components: { PostsList },
   setup() {
-    const {posts: originalPosts} = usePageContext();
+    const { posts: originalPosts } = useData();
     const posts = ref(originalPosts);
 
     const currentTab = ref(DRAFTS);
@@ -66,7 +63,7 @@ export default {
     const createPost = async () => {
       loadingCreate.value = true;
       try {
-        const {status, data} = await ax.post('posts/anotherOne');
+        const { status, data } = await ax.post('posts/anotherOne');
         if (status === 200 && data && data.id) {
           window.location.href = `/admin/post/${data.id}/edit`;
           await new Promise((r) => {
@@ -86,7 +83,7 @@ export default {
   },
   computed: {
     posts_filtered() {
-      const {currentTab, posts} = this;
+      const { currentTab, posts } = this;
       if (currentTab === DRAFTS) {
         return posts.filter((it) => it.draftTitle || it.draftContent);
       }
@@ -96,11 +93,11 @@ export default {
       return posts;
     },
     draftsCount() {
-      return this.posts.filter(it => it.draftTitle || it.draftContent).length
+      return this.posts.filter((it) => it.draftTitle || it.draftContent).length;
     },
     publishedCount() {
-      return this.posts.filter(it => it.published).length
-    }
+      return this.posts.filter((it) => it.published).length;
+    },
   },
   methods: {
     onPostDeleted(post) {

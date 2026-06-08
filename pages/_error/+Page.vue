@@ -35,24 +35,17 @@
 
 <script>
 
+import { usePageContext } from 'vike-vue/usePageContext';
 import GhostIcon from '../../assets/icons/dynamic/icon-ghost.svg';
 
 export default {
   components: {
     GhostIcon,
   },
-  props: {
-    is404: {
-      type: Boolean,
-      default: false,
-    },
+  setup() {
+    const { is404 } = usePageContext();
+    return { is404 };
   },
-  pageTitle(ctx) {
-    const { is404 } = ctx.pageProps;
-    if (is404) return 'Page not Found!';
-    return 'Server Crashed!';
-  },
-  cacheControl: 'public, max-age=3600',
 };
 </script>
 <style lang="scss">

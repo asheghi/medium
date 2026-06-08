@@ -57,10 +57,8 @@
 
 <script>
 import { ax } from '../../lib/plugins/axios';
-import { defaultSiteTitle } from '../../lib/config';
 
 export default {
-  siteTitle: `${defaultSiteTitle} - Setup`,
   name: 'SetupPage',
   data() {
     return {
@@ -123,7 +121,8 @@ export default {
     }
 
     .button {
-      @apply border border-primary transition font-bold bg-primary text-white px-4 py-1 rounded text-lg;
+      @apply border border-primary transition font-bold bg-primary text-white
+      px-4 py-1 rounded text-lg;
       &:hover,&:focus{
         @apply bg-white text-primary border border-primary;
       }

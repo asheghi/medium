@@ -130,25 +130,19 @@
 <script>
 import debounce from 'lodash.debounce';
 import slugify from 'slugify';
+import { useData } from 'vike-vue/useData';
 import { ax } from '../../../../lib/plugins/axios';
-import { usePageContext } from '../../../../renderer/usePageContext';
 import PostEditor from './post-editor.vue';
 import { getDebug, parseAxiosError } from '../../../../lib/utils';
-import LogoIcon from '../../../../assets/icons/dynamic/icon-logo.svg';
 import Modal from '../../../../components/modal.vue';
-import { defaultSiteTitle, domain } from '../../../../lib/config';
+import { domain } from '../../../../lib/config';
 
 const debug = getDebug('edit-post', 'page');
 export default {
-  pageTitle({ post }) {
-    return `Edit Post - ${post.title || defaultSiteTitle}`;
-  },
-  cacheControl: 'no-store',
   name: 'EditPost',
-  components: { PostEditor, LogoIcon, Modal },
+  components: { PostEditor, Modal },
   setup() {
-    const pageContext = usePageContext();
-    const { post } = pageContext;
+    const { post } = useData();
     return { post };
   },
   data() {
@@ -212,7 +206,7 @@ export default {
     async saveDraft() {
       this.loadingSave = true;
       try {
-        const { data, status } = await ax.post(`posts/save/${this.post.id}`, this.form);
+        await ax.post(`posts/save/${this.post.id}`, this.form);
         // todo handle error - show error if post is not saved
       } catch (e) {
         debug(parseAxiosError(e));

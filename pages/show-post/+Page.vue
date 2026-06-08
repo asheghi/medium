@@ -42,28 +42,22 @@
 </template>
 
 <script>
-import { usePageContext } from '../../renderer/usePageContext';
+import { useData } from 'vike-vue/useData';
+import hljs from 'highlight.js/lib/common';
 import BlogHeader from '../../components/BlogHeader.vue';
 import BlogFooter from '../../components/BlogFooter.vue';
-import { defaultSiteTitle } from '../../lib/config';
 
 export default {
-  pageTitle({ post }) {
-    if (!post) return defaultSiteTitle;
-    return `${post?.title} - ${defaultSiteTitle}`;
-  },
-  pageDesc({ post }) {
-    return post?.summary;
-  },
   name: 'ShowPost',
   components: { BlogFooter, BlogHeader },
   setup() {
-    const pageContext = usePageContext();
-    const { post, preview } = pageContext;
+    const { post, preview } = useData();
     return { post, preview };
   },
-  cacheControl({ preview, post }) {
-    return preview || !post?.published ? 'no-store' : 'public, max-age=300';
+  mounted() {
+    document.querySelectorAll('pre code').forEach((element) => {
+      hljs.highlightElement(element);
+    });
   },
 };
 </script>

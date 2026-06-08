@@ -1,15 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import { redirect } from 'vike/abort';
 
 const prisma = new PrismaClient();
 
-export async function onBeforeRender() {
+export async function data() {
   const hasSetup = await prisma.user.findFirst();
   if (hasSetup) {
-    return {
-      pageContext: {
-        redirect: '/admin',
-      },
-    };
+    throw redirect('/admin');
   }
-  return null;
+  return {};
 }

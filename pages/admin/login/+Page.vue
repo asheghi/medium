@@ -60,10 +60,8 @@
 
 <script>
 import { ax } from '../../../lib/plugins/axios';
-import { defaultSiteTitle } from '../../../lib/config';
 
 export default {
-  pageTitle: `Login to ${defaultSiteTitle}`,
   name: 'LoginPage',
   data() {
     return {
@@ -78,7 +76,7 @@ export default {
     async submit() {
       this.loading = true;
       try {
-        const { status, data } = await ax.post('auth/login', this.form);
+        const { status } = await ax.post('auth/login', this.form);
         if (status === 200) {
           window.location.href = '/admin';
         } else {
@@ -91,7 +89,6 @@ export default {
       }
     },
   },
-  cacheControl: 'no-store',
 };
 </script>
 

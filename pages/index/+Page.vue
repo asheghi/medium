@@ -58,35 +58,26 @@
 </template>
 
 <script>
-import { usePageContext } from '../../renderer/usePageContext';
+import { useData } from 'vike-vue/useData';
 import BlogHeader from '../../components/BlogHeader.vue';
 import BlogFooter from '../../components/BlogFooter.vue';
 import HomePostItem from './HomePostItem.vue';
 import FreshIcon from '../../assets/icons/dynamic/icon-fresh.svg';
 import OldIcon from '../../assets/icons/dynamic/icon-old.svg';
 import GhostIcon from '../../assets/icons/dynamic/icon-ghost.svg';
-import { defaultSiteTitle } from '../../lib/config';
 
 export default {
   components: {
     HomePostItem, BlogFooter, BlogHeader, FreshIcon, OldIcon, GhostIcon,
   },
   setup() {
-    const { posts, page, pageCount } = usePageContext();
+    const { posts, page, pageCount } = useData();
     return {
       posts,
       page,
       pageCount,
     };
   },
-  pageTitle(ctx) {
-    const { page } = ctx;
-    if (page > 1) {
-      return `${defaultSiteTitle} - Page ${page}`;
-    }
-    return `${defaultSiteTitle} - Home Page`;
-  },
-  cacheControl: 'public, max-age=43200',
 };
 </script>
 <style lang="scss">
