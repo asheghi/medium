@@ -5,9 +5,17 @@ const mediaDir = path.join(dataDir, 'media');
 const uploadsDir = path.join(dataDir, 'uploads');
 const isProduction = process.env.NODE_ENV === 'production';
 const sessionCookieField = 'auth.session';
+const csrfCookieField = 'auth.csrf';
 const sessionLifetimeMs = 12 * 60 * 60 * 1000;
 const authCookieOptions = {
   httpOnly: true,
+  sameSite: 'lax',
+  secure: isProduction,
+  maxAge: sessionLifetimeMs,
+  path: '/',
+};
+const csrfCookieOptions = {
+  httpOnly: false,
   sameSite: 'lax',
   secure: isProduction,
   maxAge: sessionLifetimeMs,
@@ -18,6 +26,8 @@ module.exports = {
   mediaDir,
   uploadsDir,
   sessionCookieField,
+  csrfCookieField,
   sessionLifetimeMs,
   authCookieOptions,
+  csrfCookieOptions,
 };

@@ -13,7 +13,14 @@
 Cypress.Commands.add('login', (email, password) => {
   cy.log('Command Login...')
   cy.task('db:seed-admin')
-  cy.request('POST','/api/auth/login',{email:'admin@example.com', password: 'password'})
+  cy.request('/api/auth/csrf').then(({ body }) => {
+    cy.request({
+      method: 'POST',
+      url: '/api/auth/login',
+      headers: { 'X-CSRF-Token': body.csrfToken },
+      body: { email, password },
+    })
+  })
 })
 //
 //

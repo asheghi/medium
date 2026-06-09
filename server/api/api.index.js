@@ -4,6 +4,7 @@ const { PostsRouter } = require('./posts/posts.router');
 const { MediaRouter } = require('./media/media.router');
 const { authenticateRequest } = require('./auth/auth.middleware');
 const { requireSameOrigin } = require('../lib/origin.middleware');
+const { requireCsrfToken } = require('../lib/csrf.middleware');
 
 const baseUrlApi = '/api';
 const app = Express.Router();
@@ -16,6 +17,7 @@ if (process.env.SIMULATE_SLOW_NETWORK) {
 }
 app.use(authenticateRequest);
 app.use(baseUrlApi, requireSameOrigin);
+app.use(baseUrlApi, requireCsrfToken);
 app.use(`${baseUrlApi}/auth`, AuthRouter);
 app.use(`${baseUrlApi}/posts`, PostsRouter);
 app.use(`${baseUrlApi}/media`, MediaRouter);

@@ -6,6 +6,7 @@ const {
   sessionCookieField, authCookieOptions,
 } = require('../../server-conf');
 const { asyncHandler } = require('../../lib/async-handler');
+const { issueCsrfToken } = require('../../lib/csrf.middleware');
 
 const app = Express.Router();
 const authLimiter = rateLimit({
@@ -16,6 +17,8 @@ const authLimiter = rateLimit({
 });
 
 app.use(Express.json({ limit: '16kb' }));
+
+app.get('/csrf', issueCsrfToken);
 
 function parseCredentials(body) {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';

@@ -8,6 +8,7 @@ Revive the repository as a secure single-author production blog while retaining 
 
 ### Completed on June 9, 2026
 
+- Extracted an Express application factory, added a no-SSR API test harness, introduced double-submit CSRF protection, and covered login, logout, session expiry, and mutation rejection through HTTP integration tests.
 - Upgraded Prisma to 7.8 with the PostgreSQL driver adapter and centralized all runtime access through one shared client with graceful shutdown.
 - Replaced integer identifiers with UUIDs and introduced the redesigned `User`, `Post`, `Media`, and `Session` records, post status, optimistic version storage, and a fresh disposable migration.
 - Replaced JWTs and synchronous bcrypt with hashed opaque database sessions and versioned asynchronous Node `scrypt` password hashes.
@@ -37,12 +38,12 @@ Revive the repository as a secure single-author production blog while retaining 
 
 - Finish framework upgrades for Express 5, Tailwind 4, Tiptap 3, Cypress 15, Vitest 4, and ESLint 10.
 - Add TypeScript, CI, API/integration tests, upgraded Cypress coverage, health checks, Caddy TLS, backups, and restore verification.
-- Add CSRF tokens, global request limits, session cleanup, and the command-specific publishing API with optimistic version conflicts.
+- Add global request limits, session cleanup, and the command-specific publishing API with optimistic version conflicts.
 - Monitor the moderate `@prisma/dev` tooling advisories reported by `npm audit --omit=dev`; no high or critical production advisories remain.
 
 ### Next Execution Target
 
-Create an Express application factory and API test harness, then add CSRF tokens and integration coverage for login, logout, session expiry, and mutation rejection before changing the publishing endpoints.
+Replace the legacy publishing endpoints with command-specific routes and optimistic version conflicts, then add API coverage for draft saves, publish/unpublish transitions, missing posts, and slug collisions.
 
 ## Original Findings Driving Work
 
