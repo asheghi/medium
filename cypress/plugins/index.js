@@ -12,8 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const {PrismaClient} = require("@prisma/client");
-const {hashPassword} = require("../../server/lib/utils");
+const { prisma } = require('../../server/lib/prisma');
+const { hashPassword } = require('../../server/lib/password');
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -23,34 +23,33 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('task', {
     'db:reset': async () => {
-      const prisma = new PrismaClient();
       await prisma.post.deleteMany();
+      await prisma.session.deleteMany();
       return prisma.user.deleteMany();
     },
     'db:reset-admin': async () => {
-      const prisma = new PrismaClient();
       await prisma.post.deleteMany();
+      await prisma.session.deleteMany();
       return prisma.user.deleteMany();
     },
     'db:seed-admin': async () => {
-      const prisma = new PrismaClient();
       await prisma.post.deleteMany();
+      await prisma.session.deleteMany();
       await prisma.user.deleteMany();
       return prisma.user.create({
         data: {
           email: 'admin@example.com',
-          password: hashPassword('password')
+          passwordHash: await hashPassword('password')
         }
       });
     },
     'db:seed-post': async () => {
-      const prisma = new PrismaClient();
       const user = await prisma.user.findFirst();
       return prisma.post.create({
         data:{
           title:'Dummy Post',
           content: 'Lorem ipsum',
-          published:true,
+          status: 'PUBLISHED',
           authorId: user.id,
         }
       })

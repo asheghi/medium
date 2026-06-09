@@ -1,30 +1,63 @@
-const { PrismaClient } = require('@prisma/client');
+const { prisma } = require('../../lib/prisma');
+const { verifyPassword } = require('../../lib/password');
+const {
+  createSessionToken, getSessionExpiry, hashSessionToken,
+} = require('../../lib/session');
+const { sessionLifetimeMs } = require('../../server-conf');
 
-const { comparePassword, hashPassword } = require('../../lib/utils');
+const LAST_USED_UPDATE_INTERVAL_MS = 5 * 60 * 1000;
 
-const prisma = new PrismaClient();
-module.exports.AuthService = {};
-module.exports.AuthService.login = async (email, password) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
-  if (user) {
-    const result = comparePassword(user.password, password);
-    return result ? user : null;
+async function login(email, password) {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    await verifyPassword(
+      'scrypt-v1$16384$8$1$R6xZQ-RXdgiN5WyRQc1bNg$7I6uWyvQ6hTYkHKCyqG5cqq_z4teovaP2y_UJoDxpEs_afRD24EbX6-RsdfF-y46cHUHc8oIbS-8vN_RGdhk-A',
+      password,
+    );
+    return null;
   }
-  await new Promise((r) => {
-    setTimeout(r, 500 + (Math.random() * 500));
-  });
-  return null;
-};
-module.exports.AuthService.setupAdminUser = async (email, password) => {
-  const hasSetup = await prisma.user.findFirst({});
-  if (hasSetup) return false;
+  return (await verifyPassword(user.passwordHash, password)) ? user : null;
+}
 
-  return prisma.user.create({
+async function createSession(userId, now = new Date()) {
+  const token = createSessionToken();
+  await prisma.session.create({
     data: {
-      email,
-      password: hashPassword(password),
+      tokenHash: hashSessionToken(token),
+      userId,
+      expiresAt: getSessionExpiry(sessionLifetimeMs, now),
+      lastUsedAt: now,
     },
   });
+  return token;
+}
+
+async function getSessionUser(token, now = new Date()) {
+  if (!token) return null;
+  const tokenHash = hashSessionToken(token);
+  const session = await prisma.session.findUnique({
+    where: { tokenHash },
+    include: { user: true },
+  });
+  if (!session) return null;
+  if (session.expiresAt <= now) {
+    await prisma.session.delete({ where: { id: session.id } }).catch(() => {});
+    return null;
+  }
+  if (now.getTime() - session.lastUsedAt.getTime() >= LAST_USED_UPDATE_INTERVAL_MS) {
+    await prisma.session.update({ where: { id: session.id }, data: { lastUsedAt: now } });
+  }
+  return { id: session.user.id, email: session.user.email };
+}
+
+async function revokeSession(token) {
+  if (!token) return;
+  await prisma.session.deleteMany({ where: { tokenHash: hashSessionToken(token) } });
+}
+
+module.exports.AuthService = {
+  createSession,
+  getSessionUser,
+  login,
+  revokeSession,
 };

@@ -6,6 +6,15 @@ Revive the repository as a secure single-author production blog while retaining 
 
 ## Implementation Status
 
+### Completed on June 9, 2026
+
+- Upgraded Prisma to 7.8 with the PostgreSQL driver adapter and centralized all runtime access through one shared client with graceful shutdown.
+- Replaced integer identifiers with UUIDs and introduced the redesigned `User`, `Post`, `Media`, and `Session` records, post status, optimistic version storage, and a fresh disposable migration.
+- Replaced JWTs and synchronous bcrypt with hashed opaque database sessions and versioned asynchronous Node `scrypt` password hashes.
+- Removed the public setup page and API; added an idempotent interactive `npm run admin:create` command that revokes sessions when credentials change.
+- Added password/session tests and verified migration deployment, repeated admin creation, post status serialization, and session revocation against PostgreSQL 16.
+- Verified the production Express cookie flow end to end: login, authenticated `/api/auth/me`, logout, and rejection of the revoked session.
+
 ### Completed on June 8, 2026
 
 - Added a reproducible Node 24/npm baseline with `package-lock.json`, `.nvmrc`, engine declarations, and verified `npm ci`.
@@ -26,14 +35,14 @@ Revive the repository as a secure single-author production blog while retaining 
 
 ### Remaining Priority Work
 
-- Replace JWT authentication with revocable database-backed sessions and remove the public setup endpoint in favor of an admin CLI.
-- Complete the Prisma 7 data-model redesign with UUIDs, media/session records, optimistic post versions, and one shared client lifecycle.
-- Finish framework upgrades for Express 5, Prisma 7, Tailwind 4, Tiptap 3, Cypress 15, Vitest 4, and ESLint 10.
+- Finish framework upgrades for Express 5, Tailwind 4, Tiptap 3, Cypress 15, Vitest 4, and ESLint 10.
 - Add TypeScript, CI, API/integration tests, upgraded Cypress coverage, health checks, Caddy TLS, backups, and restore verification.
+- Add CSRF tokens, global request limits, session cleanup, and the command-specific publishing API with optimistic version conflicts.
+- Monitor the moderate `@prisma/dev` tooling advisories reported by `npm audit --omit=dev`; no high or critical production advisories remain.
 
 ### Next Execution Target
 
-Implement revocable database-backed sessions and replace the public setup endpoint with an idempotent admin CLI. Coordinate this with the Prisma 7 session and user model so authentication is not migrated twice.
+Create an Express application factory and API test harness, then add CSRF tokens and integration coverage for login, logout, session expiry, and mutation rejection before changing the publishing endpoints.
 
 ## Original Findings Driving Work
 

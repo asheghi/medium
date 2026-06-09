@@ -44,8 +44,9 @@ test('publish input rejects unsafe discussion URLs', () => {
   }), /valid HTTPS URL/);
 });
 
-test('post ids must be positive safe integers', () => {
-  assert.equal(parsePostId('42'), 42);
-  assert.throws(() => parsePostId('-1'), /Invalid post id/);
+test('post ids must be UUIDs', () => {
+  const id = '2F1C728D-244E-4B38-91F7-C1D6B573FBD9';
+  assert.equal(parsePostId(id), id.toLowerCase());
+  assert.throws(() => parsePostId('42'), /Invalid post id/);
   assert.throws(() => parsePostId('abc'), /Invalid post id/);
 });

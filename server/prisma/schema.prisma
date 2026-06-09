@@ -1,44 +1,70 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String?
-  slug      String?   @unique
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  publishedAt DateTime?
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  draftContent     String?
-  draftTitle       String?
-  summary   String?
-  twitter   String?
-}
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  User   User    @relation(fields: [userId], references: [id])
+enum PostStatus {
+  DRAFT
+  PUBLISHED
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?
-  email   String   @unique
-  password String
-  Post    Post[]
-  Profile Profile?
+  id              String    @id @default(uuid()) @db.Uuid
+  name            String?
+  email           String    @unique
+  passwordHash    String
+  passwordVersion Int       @default(1)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  posts           Post[]
+  sessions        Session[]
+}
+
+model Post {
+  id             String     @id @default(uuid()) @db.Uuid
+  title          String?
+  slug           String?    @unique
+  content        String?
+  draftTitle     String?
+  draftContent   String?
+  summary        String?
+  twitter        String?
+  status         PostStatus @default(DRAFT)
+  publishedAt    DateTime?
+  version        Int        @default(1)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  authorId       String     @db.Uuid
+  author         User       @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([status, publishedAt])
+}
+
+model Media {
+  id               String   @id @default(uuid()) @db.Uuid
+  objectKey         String   @unique
+  thumbnailKey      String?  @unique
+  displayKey        String?  @unique
+  originalFilename String
+  mimeType          String
+  width             Int
+  height            Int
+  byteSize          Int
+  createdAt         DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }

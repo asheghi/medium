@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { ApiRouter } = require('./api/api.index');
 const { accessControlMiddleware } = require('./lib/acl.middleware');
+const { prisma } = require('./lib/prisma');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const root = `${__dirname}/..`;
@@ -59,7 +60,7 @@ async function startServer() {
 
   const port = process.env.PORT || 3000;
   const hostname = process.env.HOST || '127.0.0.1';
-  app.listen(port, hostname, () => {
+  const server = app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
     console.log(`Blog is listening at http://${hostname}:${port}`);
     console.log(`Access Admin Dashboard at http://${hostname}:${port}/admin`);
@@ -67,6 +68,17 @@ async function startServer() {
       process.send('ready');
     }
   });
+
+  async function shutdown(signal) {
+    console.log(`Received ${signal}; shutting down`);
+    server.close(async () => {
+      await prisma.$disconnect();
+      process.exit(0);
+    });
+  }
+
+  process.once('SIGINT', () => shutdown('SIGINT'));
+  process.once('SIGTERM', () => shutdown('SIGTERM'));
 }
 
 startServer();

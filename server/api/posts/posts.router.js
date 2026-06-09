@@ -53,7 +53,7 @@ app.post('/publish/:id', asyncHandler(async (req, res) => {
   post.title = post.draftTitle;
   post.draftTitle = null;
   post.draftContent = null;
-  post.published = true;
+  post.status = 'PUBLISHED';
   post.publishedAt = new Date();
   post.updatedAt = new Date();
   const result = await PostService.updateOne({ id }, post);
@@ -74,7 +74,9 @@ app.delete('/:postId', asyncHandler(async (req, res) => {
 }));
 app.post('/unpublish/:postId', asyncHandler(async (req, res) => {
   const id = parsePostId(req.params.postId);
-  const post = await PostService.updateOne({ id }, { published: false, updatedAt: new Date() });
+  const post = await PostService.updateOne({ id }, {
+    status: 'DRAFT', updatedAt: new Date(),
+  });
   return res.json(post);
 }));
 

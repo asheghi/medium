@@ -1,10 +1,10 @@
 const Express = require('express');
-const bodyParser = require('body-parser');
 const { rateLimit } = require('express-rate-limit');
 const { authGuard } = require('./auth.middleware');
 const { AuthService } = require('./auth.service');
-const { JwtUtils } = require('../../lib/jwt-utils');
-const { jwtCookieField, authCookieOptions } = require('../../server-conf');
+const {
+  sessionCookieField, authCookieOptions,
+} = require('../../server-conf');
 const { asyncHandler } = require('../../lib/async-handler');
 
 const app = Express.Router();
@@ -15,7 +15,7 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use(bodyParser.json({ limit: '16kb' }));
+app.use(Express.json({ limit: '16kb' }));
 
 function parseCredentials(body) {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
@@ -24,38 +24,32 @@ function parseCredentials(body) {
   return { email, password };
 }
 
-app.post('/setup', authLimiter, asyncHandler(async (req, res) => {
-  const credentials = parseCredentials(req.body);
-  if (!credentials) return res.status(400).json({ error: { code: 'INVALID_CREDENTIALS', message: 'A valid email and password are required' } });
-  const { email, password } = credentials;
-  const user = await AuthService.setupAdminUser(email, password);
-  if (!user) return res.status(409).json({ error: { code: 'ALREADY_CONFIGURED', message: 'Admin user already exists' } });
-  const token = JwtUtils.generateTokenForRequest(req, { email: user.email, id: user.id });
-  res.cookie(jwtCookieField, token, authCookieOptions);
-  return res.json({ success: !!user });
-}));
-
 app.post('/login', authLimiter, asyncHandler(async (req, res) => {
   const credentials = parseCredentials(req.body);
-  if (!credentials) return res.status(400).json({ success: false });
-  const { email, password } = credentials;
-  const user = await AuthService.login(email, password);
-  if (!user) return res.status(401).json({ success: false });
-  const token = JwtUtils.generateTokenForRequest(req, { email: user.email, id: user.id });
-  res.cookie(jwtCookieField, token, authCookieOptions);
+  if (!credentials) return res.status(400).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' } });
+  const user = await AuthService.login(credentials.email, credentials.password);
+  if (!user) return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' } });
+
+  const previousToken = req.cookies && req.cookies[sessionCookieField];
+  await AuthService.revokeSession(previousToken);
+  const token = await AuthService.createSession(user.id);
+  res.cookie(sessionCookieField, token, authCookieOptions);
   return res.json({ success: true });
 }));
 
-app.post('/logout', (req, res) => {
+app.post('/logout', asyncHandler(async (req, res) => {
+  const token = req.cookies && req.cookies[sessionCookieField];
+  await AuthService.revokeSession(token);
   const { maxAge, ...clearOptions } = authCookieOptions;
-  res.clearCookie(jwtCookieField, clearOptions);
+  res.clearCookie(sessionCookieField, clearOptions);
   return res.status(204).send();
-});
+}));
 
 app.use(authGuard);
 
 app.get('/me', (req, res) => {
-  const { email } = req.user;
-  res.json({ email });
+  const { id, email } = req.user;
+  res.json({ id, email });
 });
+
 module.exports.AuthRouter = app;

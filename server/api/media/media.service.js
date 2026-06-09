@@ -2,10 +2,8 @@ const fs = require('fs');
 const sharp = require('sharp');
 const { randomUUID } = require('crypto');
 const { join } = require('path');
-const { PrismaClient } = require('@prisma/client');
 const { mediaDir } = require('../../server-conf');
-
-const prisma = new PrismaClient();
+const { prisma } = require('../../lib/prisma');
 
 module.exports.MediaService = {
   async handleUploadedFile(file) {
@@ -21,14 +19,14 @@ module.exports.MediaService = {
     const newPath = join(mediaDir, filename);
     fs.renameSync(path, newPath);
 
-    return prisma.image.create({
+    return prisma.media.create({
       data: {
-        filename,
-        alt: originalname,
-        format,
+        objectKey: filename,
+        originalFilename: originalname,
+        mimeType: `image/${format}`,
         width,
         height,
-        size,
+        byteSize: size,
       },
     });
   },

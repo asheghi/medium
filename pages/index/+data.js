@@ -1,14 +1,14 @@
-import { PrismaClient } from '@prisma/client';
 import { postsPerPage } from '../../lib/config';
+import prismaModule from '../../server/lib/prisma';
 
-const prisma = new PrismaClient();
+const { prisma } = prismaModule;
 
 export async function data(pageContext) {
   const { routeParams } = pageContext;
   const page = +((routeParams && routeParams.page) || 1);
   const postsCount = await prisma.post.count({
     where: {
-      published: true,
+      status: 'PUBLISHED',
     },
   });
   const pageCount = Math.ceil(postsCount / postsPerPage);
@@ -18,9 +18,13 @@ export async function data(pageContext) {
     skip: (page - 1) * postsPerPage,
     orderBy: [{ publishedAt: 'desc' }],
     where: {
-      published: true,
+      status: 'PUBLISHED',
     },
   });
 
-  return { page, pageCount, posts };
+  return {
+    page,
+    pageCount,
+    posts: posts.map((post) => ({ ...post, published: post.status === 'PUBLISHED' })),
+  };
 }
