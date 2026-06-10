@@ -6,9 +6,15 @@ Revive the repository as a secure single-author production blog while retaining 
 
 ## Implementation Status
 
+### Completed on June 10, 2026
+
+- Replaced legacy post mutation URLs with command-specific `/api/admin/posts` routes for creation, draft saves, publishing, unpublishing, and deletion.
+- Added atomic optimistic version checks and increments for post commands, with structured `404` missing-post, `409` stale-version, and `409` slug-collision responses.
+- Updated the Vue admin clients to send expected versions and consume the returned post state; admin post API responses now use `Cache-Control: no-store`.
+- Added post command input, HTTP API, and service tests. The unit suite now contains 19 passing tests, and scoped lint for the changed files reports no errors.
+
 ### Completed on June 9, 2026
 
-- Replaced legacy post mutation URLs with command-specific `/api/admin/posts` routes for draft saves, publishing, and unpublishing; added atomic optimistic version checks, version increments, missing-post errors, slug-collision errors, no-store responses, updated Vue clients, and HTTP/service coverage.
 - Extracted an Express application factory, added a no-SSR API test harness, introduced double-submit CSRF protection, and covered login, logout, session expiry, and mutation rejection through HTTP integration tests.
 - Upgraded Prisma to 7.8 with the PostgreSQL driver adapter and centralized all runtime access through one shared client with graceful shutdown.
 - Replaced integer identifiers with UUIDs and introduced the redesigned `User`, `Post`, `Media`, and `Session` records, post status, optimistic version storage, and a fresh disposable migration.
@@ -38,13 +44,14 @@ Revive the repository as a secure single-author production blog while retaining 
 ### Remaining Priority Work
 
 - Finish framework upgrades for Express 5, Tailwind 4, Tiptap 3, Cypress 15, Vitest 4, and ESLint 10.
-- Add TypeScript, CI, API/integration tests, upgraded Cypress coverage, health checks, Caddy TLS, backups, and restore verification.
+- Add TypeScript and CI; expand API and integration coverage; upgrade Cypress coverage; add health checks, Caddy TLS, backups, and restore verification.
 - Add global request limits and session cleanup.
+- Resolve the repository-wide lint baseline before making lint a required CI gate; scoped lint for the latest post API change is error-free.
 - Monitor the moderate `@prisma/dev` tooling advisories reported by `npm audit --omit=dev`; no high or critical production advisories remain.
 
 ### Next Execution Target
 
-Add global request limits and expired-session cleanup, then add liveness/readiness health checks for PostgreSQL and object storage.
+Add global request limits and expired-session cleanup with unit and HTTP coverage. Then add `/health/live` and dependency-aware `/health/ready` checks for PostgreSQL and object storage.
 
 ## Original Findings Driving Work
 
