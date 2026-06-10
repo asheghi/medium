@@ -63,8 +63,8 @@ export default {
     const createPost = async () => {
       loadingCreate.value = true;
       try {
-        const { status, data } = await ax.post('posts/anotherOne');
-        if (status === 200 && data && data.id) {
+        const { status, data } = await ax.post('admin/posts');
+        if (status === 201 && data && data.id) {
           window.location.href = `/admin/post/${data.id}/edit`;
           await new Promise((r) => {
             setTimeout(r);
@@ -105,7 +105,7 @@ export default {
     },
     onUnPublishedPost(post) {
       const index = this.posts.findIndex((it) => it.id === post.id);
-      if (index >= 0) this.posts[index].published = false;
+      if (index >= 0) this.posts[index] = post;
     },
   },
 };

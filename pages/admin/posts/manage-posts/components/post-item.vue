@@ -103,8 +103,8 @@ export default {
           break;
         }
         case UN_POBLISH: {
-          await unPublishPost(post);
-          this.$emit('unPublishedPost', post);
+          const unpublishedPost = await unPublishPost(post);
+          this.$emit('unPublishedPost', unpublishedPost);
           break;
         }
 

@@ -19,7 +19,7 @@ app.use(authenticateRequest);
 app.use(baseUrlApi, requireSameOrigin);
 app.use(baseUrlApi, requireCsrfToken);
 app.use(`${baseUrlApi}/auth`, AuthRouter);
-app.use(`${baseUrlApi}/posts`, PostsRouter);
+app.use(`${baseUrlApi}/admin/posts`, PostsRouter);
 app.use(`${baseUrlApi}/media`, MediaRouter);
 
 app.use(baseUrlApi, (err, req, res, next) => {
@@ -33,6 +33,7 @@ app.use(baseUrlApi, (err, req, res, next) => {
       code,
       message: status === 500 ? 'Internal server error' : err.message,
       ...(err.fields ? { fields: err.fields } : {}),
+      ...(err.details || {}),
     },
   });
 });

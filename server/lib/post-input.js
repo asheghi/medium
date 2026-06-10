@@ -69,6 +69,34 @@ function buildPublishInput(body) {
   };
 }
 
+function parseExpectedVersion(value) {
+  if (!Number.isInteger(value) || value < 1) {
+    throw new InputError('expectedVersion must be a positive integer', ['expectedVersion']);
+  }
+  return value;
+}
+
+function buildDraftCommandInput(body) {
+  requireObject(body);
+  return {
+    expectedVersion: parseExpectedVersion(body.expectedVersion),
+    draft: buildDraftInput(body),
+  };
+}
+
+function buildPublishCommandInput(body) {
+  requireObject(body);
+  return {
+    expectedVersion: parseExpectedVersion(body.expectedVersion),
+    post: buildPublishInput(body),
+  };
+}
+
+function buildVersionCommandInput(body) {
+  requireObject(body);
+  return { expectedVersion: parseExpectedVersion(body.expectedVersion) };
+}
+
 function parsePostId(value) {
   if (typeof value !== 'string'
     || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) {
@@ -79,7 +107,10 @@ function parsePostId(value) {
 
 module.exports = {
   InputError,
+  buildDraftCommandInput,
   buildDraftInput,
+  buildPublishCommandInput,
   buildPublishInput,
+  buildVersionCommandInput,
   parsePostId,
 };

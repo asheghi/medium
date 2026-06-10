@@ -206,8 +206,11 @@ export default {
     async saveDraft() {
       this.loadingSave = true;
       try {
-        await ax.post(`posts/save/${this.post.id}`, this.form);
-        // todo handle error - show error if post is not saved
+        const { data } = await ax.patch(`admin/posts/${this.post.id}/draft`, {
+          ...this.form,
+          expectedVersion: this.post.version,
+        });
+        this.post = data;
       } catch (e) {
         debug(parseAxiosError(e));
       } finally {
@@ -219,8 +222,13 @@ export default {
       try {
         const { draftContent, draftTitle } = this.form;
         const { slug, summary, twitter } = this;
-        const { data, status } = await ax.post(`posts/publish/${this.post.id}`, {
-          draftTitle, draftContent, slug, summary, twitter,
+        const { data, status } = await ax.post(`admin/posts/${this.post.id}/publish`, {
+          draftTitle,
+          draftContent,
+          slug,
+          summary,
+          twitter,
+          expectedVersion: this.post.version,
         });
         if (status === 200) {
           this.post = data;

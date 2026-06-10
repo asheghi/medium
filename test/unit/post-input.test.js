@@ -1,8 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  buildDraftCommandInput,
   buildDraftInput,
+  buildPublishCommandInput,
   buildPublishInput,
+  buildVersionCommandInput,
   parsePostId,
 } = require('../../server/lib/post-input');
 
@@ -42,6 +45,24 @@ test('publish input rejects unsafe discussion URLs', () => {
     draftContent: '<p>Content</p>',
     twitter: unsafeProtocol,
   }), /valid HTTPS URL/);
+});
+
+test('post commands require a positive expected version', () => {
+  assert.deepEqual(buildDraftCommandInput({
+    expectedVersion: 3,
+    draftTitle: 'Changed',
+  }), {
+    expectedVersion: 3,
+    draft: { draftTitle: 'Changed' },
+  });
+  assert.equal(buildPublishCommandInput({
+    expectedVersion: 4,
+    draftTitle: 'Post',
+    draftContent: '<p>Content</p>',
+  }).expectedVersion, 4);
+  assert.deepEqual(buildVersionCommandInput({ expectedVersion: 5 }), { expectedVersion: 5 });
+  assert.throws(() => buildVersionCommandInput({ expectedVersion: 0 }), /positive integer/);
+  assert.throws(() => buildVersionCommandInput({ expectedVersion: '1' }), /positive integer/);
 });
 
 test('post ids must be UUIDs', () => {

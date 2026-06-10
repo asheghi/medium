@@ -1,7 +1,10 @@
 import moment from 'moment';
 import { ax } from '../../../../lib/plugins/axios';
 
-export function getTitleLink(post,currentTab) {
+export const DRAFTS = 'drafts';
+export const PUBLISHED = 'published';
+
+export function getTitleLink(post, currentTab) {
   if (currentTab === DRAFTS) {
     return `/admin/post/${post.id}/edit`;
   }
@@ -12,18 +15,17 @@ export function getTitleLink(post,currentTab) {
 }
 
 export async function deletePost(post) {
-  const { data, status } = await ax.delete(`posts/${post.id}`);
+  const { status } = await ax.delete(`admin/posts/${post.id}`);
   if (status !== 200) throw new Error('failed to delete post');
   return post;
 }
 export async function unPublishPost(post) {
-  const { data, status } = await ax.post(`posts/unpublish/${post.id}`);
-  if (status !== 200) throw new Error('failed to delete post');
-  return post;
+  const { data, status } = await ax.post(`admin/posts/${post.id}/unpublish`, {
+    expectedVersion: post.version,
+  });
+  if (status !== 200) throw new Error('failed to unpublish post');
+  return data;
 }
 export function formatDateTime(arg) {
   return moment(arg).fromNow();
 }
-
-export const DRAFTS = 'drafts';
-export const PUBLISHED = 'published';

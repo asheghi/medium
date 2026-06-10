@@ -1,24 +1,34 @@
 const Express = require('express');
-const bodyParser = require('body-parser');
 const { PostService } = require('./posts.service');
 const { randomString } = require('../../lib/utils');
 const { authGuard } = require('../auth/auth.middleware');
 const { asyncHandler } = require('../../lib/async-handler');
 const { sanitizePostHtml } = require('../../lib/content-sanitizer.cjs');
-const { buildDraftInput, buildPublishInput, parsePostId } = require('../../lib/post-input');
+const {
+  buildDraftCommandInput,
+  buildPublishCommandInput,
+  buildVersionCommandInput,
+  parsePostId,
+} = require('../../lib/post-input');
 
 const app = Express.Router();
 
-app.use(bodyParser.json({ limit: '2mb' }));
+app.use(Express.json({ limit: '2mb' }));
 
 app.use(authGuard);
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
 
 app.post('/', asyncHandler(async (req, res) => {
-  const post = { ...buildDraftInput(req.body), authorId: req.user.id, slug: randomString(14) };
+  const post = {
+    draftTitle: 'Untitled',
+    draftContent: 'Put down what you want to say ...',
+    authorId: req.user.id,
+    slug: randomString(14),
+  };
   const result = await PostService.create(post);
-  if (req.query.redirect) {
-    return res.redirect(`/admin/post/${result.id}/edit`);
-  }
   return res.status(201).json(result);
 }));
 
@@ -27,37 +37,26 @@ app.get('/', asyncHandler(async (req, res) => {
   return res.json(posts);
 }));
 
-app.post('/anotherOne', asyncHandler(async (req, res) => {
-  const post = {
-    draftTitle: 'Untitled',
-    draftContent: 'Put down what you want to say ...',
-    authorId: req.user.id,
-    slug: randomString(14),
-  };
-  const { id } = await PostService.create(post);
-  return res.status(200).json({ id });
-}));
-
-app.post('/save/:id', asyncHandler(async (req, res) => {
+app.patch('/:id/draft', asyncHandler(async (req, res) => {
   const id = parsePostId(req.params.id);
-  const post = buildDraftInput(req.body);
-  post.updatedAt = new Date();
-  const result = await PostService.updateOne({ id }, post);
+  const { expectedVersion, draft } = buildDraftCommandInput(req.body);
+  const result = await PostService.saveDraft(id, expectedVersion, draft);
   return res.json(result);
 }));
 
-app.post('/publish/:id', asyncHandler(async (req, res) => {
+app.post('/:id/publish', asyncHandler(async (req, res) => {
   const id = parsePostId(req.params.id);
-  const post = buildPublishInput(req.body);
+  const { expectedVersion, post } = buildPublishCommandInput(req.body);
   post.content = sanitizePostHtml(post.draftContent);
-  post.title = post.draftTitle;
-  post.draftTitle = null;
-  post.draftContent = null;
-  post.status = 'PUBLISHED';
-  post.publishedAt = new Date();
-  post.updatedAt = new Date();
-  const result = await PostService.updateOne({ id }, post);
+  const result = await PostService.publish(id, expectedVersion, post);
   return res.json(result);
+}));
+
+app.post('/:id/unpublish', asyncHandler(async (req, res) => {
+  const id = parsePostId(req.params.id);
+  const { expectedVersion } = buildVersionCommandInput(req.body);
+  const post = await PostService.unpublish(id, expectedVersion);
+  return res.json(post);
 }));
 
 app.get('/:postId', asyncHandler(async (req, res) => {
@@ -71,17 +70,6 @@ app.delete('/:postId', asyncHandler(async (req, res) => {
   const id = parsePostId(req.params.postId);
   const post = await PostService.deleteOne({ id });
   return res.json(post);
-}));
-app.post('/unpublish/:postId', asyncHandler(async (req, res) => {
-  const id = parsePostId(req.params.postId);
-  const post = await PostService.updateOne({ id }, {
-    status: 'DRAFT', updatedAt: new Date(),
-  });
-  return res.json(post);
-}));
-
-app.put('/:postId', (req, res) => res.status(405).json({
-  error: { code: 'METHOD_NOT_ALLOWED', message: 'Use the draft, publish, or unpublish endpoints' },
 }));
 
 module.exports.PostsRouter = app;
